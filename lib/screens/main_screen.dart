@@ -14,36 +14,52 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
+
   final List<Widget> screen = [
     const HomeScreen(),
     const LearnScreen(),
     const RoadmapScreen(),
     const ProjectScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("StudyFlow")),
-
-      body: const Center(
-        child: Text(
-          "StudyFlow Home",
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-      ),
+      body: screen[selectedIndex],
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
         child: GNav(
+          selectedIndex: selectedIndex,
+
+          
+
           onTabChange: (index) {
-            print("Selected tab: $index");
+            setState(() {
+              selectedIndex = index;
+            });
           },
 
           tabs: const [
-            GButton(icon: Icons.home, text: 'Home'),
-            GButton(icon: Icons.menu_book, text: 'Learn'),
-            GButton(icon: Icons.route, text: 'Roadmap'),
-            GButton(icon: Icons.code, text: 'Projects'),
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.menu_book,
+              text: 'Learn',
+            ),
+            GButton(
+              icon: Icons.route,
+              text: 'Roadmap',
+            ),
+            GButton(
+              icon: Icons.code,
+              text: 'Projects',
+            ),
           ],
         ),
       ),

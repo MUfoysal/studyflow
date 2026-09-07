@@ -12,6 +12,21 @@ class studyFlowApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "studyFlow",
+
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF16A34A),
+        ),
+
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Color(0xFF111827),
+          elevation:0,
+        ),
+        
+      ),
+
       home: MainScreen()
     );
   }
