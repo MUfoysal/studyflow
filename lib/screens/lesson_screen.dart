@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:study_flow/screens/lesson_details_screen.dart';
 import 'package:study_flow/models/lesson.dart';
 
-class LessonScreen extends StatelessWidget {
+class LessonScreen extends StatefulWidget {
   final String title;
   final int lessonCount;
   final List<Lesson> lessons;
@@ -15,62 +15,72 @@ class LessonScreen extends StatelessWidget {
   });
 
   @override
+  State<LessonScreen> createState() => _LessonScreenState();
+}
+
+class _LessonScreenState extends State<LessonScreen> {
+  final Set<int> completedLessons = {};
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
-
       body: ListView.builder(
         padding: const EdgeInsets.all(10),
-
-        itemCount: lessons.length,
-
+        itemCount: widget.lessons.length,
         itemBuilder: (context, index) {
-          final lesson = lessons[index];
+          final lesson = widget.lessons[index];
 
           return Card(
             color: Colors.white,
             elevation: 0,
-
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: const BorderSide(
                 color: Color(0xFFDCFCE7),
               ),
             ),
-
             margin: const EdgeInsets.only(bottom: 12),
-
             child: ListTile(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => LessonDetailsScreen(
-                      courseTitle: title,
+                      courseTitle: widget.title,
                       lessonTitle: lesson.title,
                       lessonNumber: index + 1,
                       description: lesson.description,
                       keyPoints: lesson.keyPoints,
                       exampleCode: lesson.exampleCode,
+                      onComplete: () {
+                        setState(() {
+                          completedLessons.add(index);
+                        });
+                      },
                     ),
                   ),
                 );
               },
-
               leading: CircleAvatar(
-                backgroundColor: const Color(0xFFDCFCE7),
-
-                child: Text(
-                  "${index + 1}",
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                backgroundColor: completedLessons.contains(index)
+                    ? Colors.green
+                    : const Color(0xFFDCFCE7),
+                child: completedLessons.contains(index)
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      )
+                    : Text(
+                        "${index + 1}",
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
-
               title: Text(
                 lesson.title,
                 style: const TextStyle(
@@ -78,12 +88,16 @@ class LessonScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.green,
-              ),
+              trailing: completedLessons.contains(index)
+                  ? const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                    )
+                  : const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.green,
+                    ),
             ),
           );
         },

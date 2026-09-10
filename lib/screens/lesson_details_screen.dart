@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +10,7 @@ class LessonDetailsScreen extends StatefulWidget {
   final String description;
   final List<String> keyPoints;
   final String exampleCode;
+  final VoidCallback? onComplete;
 
   const LessonDetailsScreen({
     super.key,
@@ -17,6 +20,7 @@ class LessonDetailsScreen extends StatefulWidget {
     required this.description,
     required this.keyPoints,
     required this.exampleCode,
+    this.onComplete,
   });
 
   @override
@@ -134,6 +138,7 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                   setState(() {
                     isCompleted = true;
                   });
+                  widget.onComplete?.call();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
