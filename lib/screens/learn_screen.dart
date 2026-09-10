@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_flow/screens/lesson_screen.dart';
+import 'package:study_flow/models/lesson.dart';
 
 class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
@@ -15,11 +16,15 @@ class _LearnScreenState extends State<LearnScreen> {
       appBar: AppBar(
         title: const Text("Learn"),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
+
             const Text(
               "Start Learning 📚",
               style: TextStyle(
@@ -43,18 +48,23 @@ class _LearnScreenState extends State<LearnScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
+
               decoration: BoxDecoration(
                 color: const Color(0xFFDCFCE7),
                 borderRadius: BorderRadius.circular(20),
               ),
+
               child: Row(
                 children: [
+
                   Container(
                     padding: const EdgeInsets.all(14),
+
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
                     ),
+
                     child: const Icon(
                       Icons.play_arrow_rounded,
                       color: Colors.green,
@@ -67,7 +77,9 @@ class _LearnScreenState extends State<LearnScreen> {
                   const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
+
                         Text(
                           "Continue Learning",
                           style: TextStyle(
@@ -112,7 +124,7 @@ class _LearnScreenState extends State<LearnScreen> {
             _courseCard(
               icon: Icons.flutter_dash,
               title: "Flutter Basics",
-              lessons: "12 Lessons",
+              lessons: flutterLessons,
               progress: 0.35,
             ),
 
@@ -121,7 +133,7 @@ class _LearnScreenState extends State<LearnScreen> {
             _courseCard(
               icon: Icons.code,
               title: "Dart Programming",
-              lessons: "15 Lessons",
+              lessons: [],
               progress: 0.20,
             ),
 
@@ -130,7 +142,7 @@ class _LearnScreenState extends State<LearnScreen> {
             _courseCard(
               icon: Icons.source,
               title: "Git & GitHub",
-              lessons: "10 Lessons",
+              lessons: [],
               progress: 0.10,
             ),
           ],
@@ -142,21 +154,22 @@ class _LearnScreenState extends State<LearnScreen> {
   Widget _courseCard({
     required IconData icon,
     required String title,
-    required String lessons,
+    required List<Lesson> lessons,
     required double progress,
   }) {
     return InkWell(
       onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => LessonScreen(
-        title: title,
-        lessonCount: int.parse(lessons.split(" ")[0]),
-      ),
-    ),
-  );
-},
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LessonScreen(
+              title: title,
+              lessonCount: lessons.length,
+              lessons: lessons,
+            ),
+          ),
+        );
+      },
 
       borderRadius: BorderRadius.circular(18),
 
@@ -167,6 +180,7 @@ class _LearnScreenState extends State<LearnScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
+
           border: Border.all(
             color: Colors.grey.shade200,
           ),
@@ -174,15 +188,20 @@ class _LearnScreenState extends State<LearnScreen> {
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
+
             Row(
               children: [
+
                 Container(
                   padding: const EdgeInsets.all(12),
+
                   decoration: BoxDecoration(
                     color: const Color(0xFFDCFCE7),
                     borderRadius: BorderRadius.circular(12),
                   ),
+
                   child: Icon(
                     icon,
                     color: Colors.green,
@@ -195,7 +214,9 @@ class _LearnScreenState extends State<LearnScreen> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
+
                       Text(
                         title,
                         style: const TextStyle(
@@ -207,7 +228,7 @@ class _LearnScreenState extends State<LearnScreen> {
                       const SizedBox(height: 5),
 
                       Text(
-                        lessons,
+                        "${lessons.length} Lessons",
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
@@ -228,11 +249,14 @@ class _LearnScreenState extends State<LearnScreen> {
 
             Row(
               children: [
+
                 Expanded(
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 7,
+
                     borderRadius: BorderRadius.circular(10),
+
                     backgroundColor: Colors.grey.shade200,
                     color: Colors.green,
                   ),
