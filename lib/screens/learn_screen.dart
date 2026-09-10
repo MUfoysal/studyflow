@@ -10,12 +10,11 @@ class LearnScreen extends StatefulWidget {
 }
 
 class _LearnScreenState extends State<LearnScreen> {
+  double flutterProgress = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Learn"),
-      ),
+      appBar: AppBar(title: const Text("Learn")),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -24,23 +23,16 @@ class _LearnScreenState extends State<LearnScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-
             const Text(
               "Start Learning 📚",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
             const Text(
               "Choose a topic and continue your learning journey.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
 
             const SizedBox(height: 24),
@@ -56,7 +48,6 @@ class _LearnScreenState extends State<LearnScreen> {
 
               child: Row(
                 children: [
-
                   Container(
                     padding: const EdgeInsets.all(14),
 
@@ -79,7 +70,6 @@ class _LearnScreenState extends State<LearnScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-
                         Text(
                           "Continue Learning",
                           style: TextStyle(
@@ -92,19 +82,13 @@ class _LearnScreenState extends State<LearnScreen> {
 
                         Text(
                           "Flutter Basics",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
 
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 18,
-                  ),
+                  const Icon(Icons.arrow_forward_ios, size: 18),
                 ],
               ),
             ),
@@ -113,10 +97,7 @@ class _LearnScreenState extends State<LearnScreen> {
 
             const Text(
               "Courses",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 16),
@@ -125,7 +106,7 @@ class _LearnScreenState extends State<LearnScreen> {
               icon: Icons.flutter_dash,
               title: "Flutter Basics",
               lessons: flutterLessons,
-              progress: 0.35,
+              progress: flutterProgress,
             ),
 
             const SizedBox(height: 14),
@@ -158,8 +139,8 @@ class _LearnScreenState extends State<LearnScreen> {
     required double progress,
   }) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final completedCount = await Navigator.push<int>(
           context,
           MaterialPageRoute(
             builder: (context) => LessonScreen(
@@ -169,6 +150,13 @@ class _LearnScreenState extends State<LearnScreen> {
             ),
           ),
         );
+        if (completedCount != null && lessons.isNotEmpty) {
+          setState(() {
+            if (title == "Flutter Basics") {
+              flutterProgress = completedCount / lessons.length;
+            }
+          });
+        }
       },
 
       borderRadius: BorderRadius.circular(18),
@@ -181,19 +169,15 @@ class _LearnScreenState extends State<LearnScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
 
-          border: Border.all(
-            color: Colors.grey.shade200,
-          ),
+          border: Border.all(color: Colors.grey.shade200),
         ),
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-
             Row(
               children: [
-
                 Container(
                   padding: const EdgeInsets.all(12),
 
@@ -202,11 +186,7 @@ class _LearnScreenState extends State<LearnScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
 
-                  child: Icon(
-                    icon,
-                    color: Colors.green,
-                    size: 28,
-                  ),
+                  child: Icon(icon, color: Colors.green, size: 28),
                 ),
 
                 const SizedBox(width: 14),
@@ -216,7 +196,6 @@ class _LearnScreenState extends State<LearnScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-
                       Text(
                         title,
                         style: const TextStyle(
@@ -238,10 +217,7 @@ class _LearnScreenState extends State<LearnScreen> {
                   ),
                 ),
 
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 17,
-                ),
+                const Icon(Icons.arrow_forward_ios, size: 17),
               ],
             ),
 
@@ -249,7 +225,6 @@ class _LearnScreenState extends State<LearnScreen> {
 
             Row(
               children: [
-
                 Expanded(
                   child: LinearProgressIndicator(
                     value: progress,

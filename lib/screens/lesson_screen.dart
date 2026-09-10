@@ -20,12 +20,19 @@ class LessonScreen extends StatefulWidget {
 
 class _LessonScreenState extends State<LessonScreen> {
   final Set<int> completedLessons = {};
+  double flutterProgress = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, completedLessons.length);
+          },
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(10),
@@ -38,9 +45,7 @@ class _LessonScreenState extends State<LessonScreen> {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: const BorderSide(
-                color: Color(0xFFDCFCE7),
-              ),
+              side: const BorderSide(color: Color(0xFFDCFCE7)),
             ),
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
@@ -69,10 +74,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     ? Colors.green
                     : const Color(0xFFDCFCE7),
                 child: completedLessons.contains(index)
-                    ? const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                      )
+                    ? const Icon(Icons.check, color: Colors.white)
                     : Text(
                         "${index + 1}",
                         style: const TextStyle(
@@ -89,10 +91,7 @@ class _LessonScreenState extends State<LessonScreen> {
                 ),
               ),
               trailing: completedLessons.contains(index)
-                  ? const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    )
+                  ? const Icon(Icons.check_circle, color: Colors.green)
                   : const Icon(
                       Icons.arrow_forward_ios,
                       size: 16,
