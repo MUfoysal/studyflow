@@ -2,11 +2,13 @@ class Lesson {
   final String title;
   final String description;
   final List<String> keyPoints;
+  final String exampleCode;
 
   Lesson({
     required this.title,
     required this.description,
     required this.keyPoints,
+    required this.exampleCode,
   });
 }
 
@@ -20,6 +22,11 @@ final List<Lesson> flutterLessons = [
       "Flutter uses widgets to build user interfaces.",
       "Flutter can build apps for multiple platforms.",
     ],
+    exampleCode: '''
+void main() {
+  runApp(const MyApp());
+}
+''',
   ),
 
   Lesson(
@@ -31,6 +38,11 @@ final List<Lesson> flutterLessons = [
       "Flutter supports multiple platforms.",
       "Flutter provides fast development with hot reload.",
     ],
+    exampleCode: '''
+void main() {
+  print("Hello Flutter");
+}
+''',
   ),
 
   Lesson(
@@ -42,5 +54,12 @@ final List<Lesson> flutterLessons = [
       "Flutter has its own rendering system.",
       "Widgets can be combined to create complex interfaces.",
     ],
+    exampleCode: '''
+MaterialApp(
+  home: Scaffold(
+    body: Text("Hello Flutter"),
+  ),
+)
+''',
   ),
 ];
