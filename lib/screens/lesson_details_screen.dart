@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class LessonDetailsScreen extends StatelessWidget {
@@ -5,6 +6,7 @@ class LessonDetailsScreen extends StatelessWidget {
   final String lessonTitle;
   final int lessonNumber;
   final String description;
+  final List<String> keyPoints;
 
   const LessonDetailsScreen({
     super.key,
@@ -12,6 +14,7 @@ class LessonDetailsScreen extends StatelessWidget {
     required this.lessonTitle,
     required this.lessonNumber,
     required this.description,
+    required this.keyPoints,
   });
 
   @override
@@ -46,11 +49,32 @@ class LessonDetailsScreen extends StatelessWidget {
 
             Text(
               description,
-              style: TextStyle(
-                fontSize: 16, 
-                height: 1.6, 
-                color: Colors.grey),
+              style: TextStyle(fontSize: 16, height: 1.6, color: Colors.grey),
             ),
+
+            SizedBox(height: 24),
+
+            Text(
+              "Key Points",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 12),
+
+        Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: keyPoints.map((point) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        "• $point",
+        style: const TextStyle(
+          fontSize: 16,
+          height: 1.5,
+        ),
+      ),
+    );
+  }).toList(),
+),
           ],
         ),
       ),

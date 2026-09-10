@@ -52,6 +52,7 @@ class LessonScreen extends StatelessWidget {
                       lessonTitle: lesson.title,
                       lessonNumber: index + 1,
                       description: lesson.description,
+                      keyPoints: lesson.keyPoints,
                     ),
                   ),
                 );
