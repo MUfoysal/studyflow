@@ -199,6 +199,9 @@ class _LearnScreenState extends State<LearnScreen> {
             if (title == "Dart Programming") {
               dartProgress = completedCount / lessons.length;
             }
+            if (title == "Git & GitHub") {
+              gitProgress = completedCount / lessons.length;
+            }
           });
         }
       },
