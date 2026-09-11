@@ -1,6 +1,9 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:study_flow/screens/lesson_details_screen.dart';
 import 'package:study_flow/models/lesson.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LessonScreen extends StatefulWidget {
   final String title;
@@ -20,6 +23,20 @@ class LessonScreen extends StatefulWidget {
 
 class _LessonScreenState extends State<LessonScreen> {
   final Set<int> completedLessons = {};
+  Future<void> loadCompletedLessons() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final savedLessons = prefs.getStringList('completed_${widget.title}') ?? [];
+    setState(() {
+      completedLessons.addAll(savedLessons.map((index) => int.parse(index)));
+    });
+  }
+
+void initState() {
+  super.initState();
+  loadCompletedLessons();
+}
+
   double flutterProgress = 0.0;
 
   @override
@@ -60,10 +77,19 @@ class _LessonScreenState extends State<LessonScreen> {
                       description: lesson.description,
                       keyPoints: lesson.keyPoints,
                       exampleCode: lesson.exampleCode,
-                      onComplete: () {
+                      onComplete: () async {
                         setState(() {
                           completedLessons.add(index);
                         });
+
+                        final prefs = await SharedPreferences.getInstance();
+
+                        await prefs.setStringList(
+                          'completed_${widget.title}',
+                          completedLessons
+                              .map((index) => index.toString())
+                              .toList(),
+                        );
                       },
                     ),
                   ),

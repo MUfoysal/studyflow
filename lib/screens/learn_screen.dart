@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:study_flow/screens/lesson_screen.dart';
 import 'package:study_flow/models/lesson.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
@@ -11,6 +12,25 @@ class LearnScreen extends StatefulWidget {
 
 class _LearnScreenState extends State<LearnScreen> {
   double flutterProgress = 0.0;
+
+  Future<void> loadFlutterProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final savedLessons =
+        prefs.getStringList('completed_Flutter Basics') ?? [];
+
+    setState(() {
+      flutterProgress =
+          savedLessons.length / flutterLessons.length;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadFlutterProgress();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
