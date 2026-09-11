@@ -1,5 +1,4 @@
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,6 +28,26 @@ class LessonDetailsScreen extends StatefulWidget {
 
 class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
   bool isCompleted = false;
+  Future<void> loadCompletionStatue() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final savedlessons =
+        prefs.getStringList('completed_${widget.courseTitle}') ?? [];
+
+    final lessonIndex = widget.lessonNumber - 1;
+
+    if (savedlessons.contains(lessonIndex.toString())) {
+      setState(() {
+        isCompleted = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadCompletionStatue();
+  }
 
   @override
   Widget build(BuildContext context) {
