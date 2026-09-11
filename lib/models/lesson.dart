@@ -296,3 +296,174 @@ void main() {
 ''',
   ),
 ];
+final List<Lesson> gitLessons = [
+  Lesson(
+    title: "What is Git?",
+    description:
+        "Git is a version control system used to track changes in a project.",
+    keyPoints: [
+      "Git tracks changes in files.",
+      "Git helps developers manage project versions.",
+      "Git works locally on your computer.",
+    ],
+    exampleCode: '''
+git --version
+''',
+  ),
+
+  Lesson(
+    title: "What is GitHub?",
+    description:
+        "GitHub is a platform used to store, share, and collaborate on Git repositories.",
+    keyPoints: [
+      "GitHub hosts Git repositories online.",
+      "GitHub helps developers collaborate.",
+      "GitHub can be used to showcase projects.",
+    ],
+    exampleCode: '''
+git remote -v
+''',
+  ),
+
+  Lesson(
+    title: "Git vs GitHub",
+    description:
+        "Git and GitHub are related but they serve different purposes.",
+    keyPoints: [
+      "Git is a version control system.",
+      "GitHub is an online platform for Git repositories.",
+      "Git can work without GitHub.",
+    ],
+    exampleCode: '''
+git --version
+git remote -v
+''',
+  ),
+
+  Lesson(
+    title: "Git Repository",
+    description:
+        "A Git repository is a project folder where Git tracks files and their changes.",
+    keyPoints: [
+      "A repository contains project files.",
+      "Git stores project history inside the repository.",
+      "A repository can be local or connected to GitHub.",
+    ],
+    exampleCode: '''
+git init
+''',
+  ),
+
+  Lesson(
+    title: "Git Init",
+    description:
+        "The git init command creates a new Git repository inside a project folder.",
+    keyPoints: [
+      "git init initializes Git.",
+      "It creates a .git folder.",
+      "It starts tracking the project with Git.",
+    ],
+    exampleCode: '''
+git init
+''',
+  ),
+
+  Lesson(
+    title: "Git Status",
+    description:
+        "The git status command shows the current state of files in a Git repository.",
+    keyPoints: [
+      "It shows modified files.",
+      "It shows untracked files.",
+      "It helps check what will be committed.",
+    ],
+    exampleCode: '''
+git status
+''',
+  ),
+
+  Lesson(
+    title: "Git Add",
+    description:
+        "The git add command prepares changes to be included in the next commit.",
+    keyPoints: [
+      "git add stages changes.",
+      "You can stage individual files.",
+      "You can stage all changes using git add .",
+    ],
+    exampleCode: '''
+git add .
+''',
+  ),
+
+  Lesson(
+    title: "Git Commit",
+    description:
+        "A commit saves a snapshot of staged changes in the Git history.",
+    keyPoints: [
+      "Commits create project history.",
+      "Each commit should have a meaningful message.",
+      "Commits allow you to track previous changes.",
+    ],
+    exampleCode: '''
+git commit -m "Add login screen"
+''',
+  ),
+
+  Lesson(
+    title: "Git Push",
+    description:
+        "The git push command uploads local commits to a remote repository such as GitHub.",
+    keyPoints: [
+      "git push sends commits to a remote repository.",
+      "It keeps the GitHub repository updated.",
+      "You normally push after committing changes.",
+    ],
+    exampleCode: '''
+git push origin main
+''',
+  ),
+
+  Lesson(
+    title: "Git Pull",
+    description:
+        "The git pull command downloads and integrates changes from a remote repository.",
+    keyPoints: [
+      "git pull gets changes from a remote repository.",
+      "It helps keep your local project updated.",
+      "It is useful when working with other developers.",
+    ],
+    exampleCode: '''
+git pull origin main
+''',
+  ),
+
+  Lesson(
+    title: "Git Clone",
+    description:
+        "The git clone command creates a local copy of a remote Git repository.",
+    keyPoints: [
+      "git clone downloads a repository.",
+      "It creates a local project copy.",
+      "It is commonly used to start working on an existing project.",
+    ],
+    exampleCode: '''
+git clone https://github.com/user/project.git
+''',
+  ),
+
+  Lesson(
+    title: "Git Branch",
+    description:
+        "Branches allow developers to work on different versions or features of a project separately.",
+    keyPoints: [
+      "Branches isolate development work.",
+      "The main branch usually contains the stable project.",
+      "Branches are useful for developing new features.",
+    ],
+    exampleCode: '''
+git branch feature-login
+git switch feature-login
+''',
+  ),
+];

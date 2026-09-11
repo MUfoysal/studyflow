@@ -13,6 +13,7 @@ class LearnScreen extends StatefulWidget {
 class _LearnScreenState extends State<LearnScreen> {
   double flutterProgress = 0.0;
   double dartProgress = 0.0;
+  double gitProgress = 0.0;
 
   Future<double> getCourseProgress(String courseTitle, int totalLessons) async {
     final prefs = await SharedPreferences.getInstance();
@@ -35,10 +36,12 @@ class _LearnScreenState extends State<LearnScreen> {
       "Dart Programming",
       dartLessons.length,
     );
+    final git = await getCourseProgress("Git & GitHub", gitLessons.length);
 
     setState(() {
       flutterProgress = flutter;
       dartProgress = dart;
+      gitProgress = git;
     });
   }
 
@@ -161,8 +164,8 @@ class _LearnScreenState extends State<LearnScreen> {
             _courseCard(
               icon: Icons.source,
               title: "Git & GitHub",
-              lessons: [],
-              progress: 0.10,
+              lessons: gitLessons,
+              progress: gitProgress,
             ),
           ],
         ),
