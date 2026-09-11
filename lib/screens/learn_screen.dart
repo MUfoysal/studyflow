@@ -13,22 +13,33 @@ class LearnScreen extends StatefulWidget {
 class _LearnScreenState extends State<LearnScreen> {
   double flutterProgress = 0.0;
 
-  Future<void> loadFlutterProgress() async {
+  Future<double> getCourseProgress(String courseTitle, int totalLessons) async {
     final prefs = await SharedPreferences.getInstance();
 
-    final savedLessons =
-        prefs.getStringList('completed_Flutter Basics') ?? [];
+    final savedLessons = prefs.getStringList('completed_$courseTitle') ?? [];
 
+    if (totalLessons == 0) {
+      return 0.0;
+    }
+
+    return savedLessons.length / totalLessons;
+  }
+
+  Future<void> loadProgress() async {
+    final progress = await getCourseProgress(
+      "Flutter Basics",
+      flutterLessons.length,
+    );
     setState(() {
-      flutterProgress =
-          savedLessons.length / flutterLessons.length;
+      flutterProgress = progress;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    loadFlutterProgress();
+
+    loadProgress();
   }
 
   @override
