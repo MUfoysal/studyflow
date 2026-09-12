@@ -1,33 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:study_flow/screens/main_screen.dart';
+import 'package:study_flow/screens/roadmap_screen.dart';
+import 'package:study_flow/screens/roadmap_detail_screen.dart';
 
 void main() {
-  runApp(studyFlowApp());
+  runApp(const StudyFlowApp());
 }
-class studyFlowApp extends StatelessWidget {
-  const studyFlowApp({super.key});
+
+class StudyFlowApp extends StatelessWidget {
+  const StudyFlowApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "studyFlow",
+      title: "StudyFlow",
 
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF16A34A),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF16A34A),
         ),
-
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: Color(0xFF111827),
-          elevation:0,
+          elevation: 0,
         ),
-        
       ),
 
-      home: MainScreen()
+      home: const MainScreen(),
+
+      routes: {
+        '/roadmap-detail': (context) {
+          final step =
+              ModalRoute.of(context)!.settings.arguments as RoadmapStep;
+
+          return RoadmapDetailScreen(
+            step: step,
+          );
+        },
+      },
     );
   }
 }

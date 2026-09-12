@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -185,8 +185,7 @@ class _LearnScreenState extends State<LearnScreen> {
     );
 
     if (!mounted) return;
-
-  Future<void> _openCourse(
+Future<void> _openCourse(
   String title,
   List<Lesson> lessons,
 ) async {
