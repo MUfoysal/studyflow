@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_flow/models/lesson.dart';
@@ -184,20 +186,29 @@ class _LearnScreenState extends State<LearnScreen> {
 
     if (!mounted) return;
 
-    if (completedCount != null && lessons.isNotEmpty) {
-      final ratio = completedCount / lessons.length;
+  Future<void> _openCourse(
+  String title,
+  List<Lesson> lessons,
+) async {
+  await Navigator.push<int>(
+    context,
+    MaterialPageRoute(
+      builder: (context) => LessonScreen(
+        title: title,
+        lessonCount: lessons.length,
+        lessons: lessons,
+      ),
+    ),
+  );
 
-      setState(() {
-        if (title == "Flutter Basics") {
-          flutterProgress = ratio;
-        } else if (title == "Dart Programming") {
-          dartProgress = ratio;
-        } else if (title == "Git & GitHub") {
-          gitProgress = ratio;
-        }
-      });
-    }
-  }
+  if (!mounted) return;
+
+  await loadProgress();
+}
+
+
+
+}
 }
 
 class _ContinueLearningBanner extends StatelessWidget {

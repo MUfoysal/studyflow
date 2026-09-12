@@ -37,28 +37,36 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screen[selectedIndex],
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
         child: GNav(
           selectedIndex: selectedIndex,
-
-          onTabChange: (index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
-
+          onTabChange: _changeTab,
           tabs: const [
-            GButton(icon: Icons.home, text: 'Home'),
-            GButton(icon: Icons.menu_book, text: 'Learn'),
-            GButton(icon: Icons.route, text: 'Roadmap'),
-            GButton(icon: Icons.code, text: 'Projects'),
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.menu_book,
+              text: 'Learn',
+            ),
+            GButton(
+              icon: Icons.route,
+              text: 'Roadmap',
+            ),
+            GButton(
+              icon: Icons.code,
+              text: 'Projects',
+            ),
           ],
         ),
       ),
