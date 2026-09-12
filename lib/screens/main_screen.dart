@@ -15,12 +15,28 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
 
-  final List<Widget> screen = [
-    const HomeScreen(),
-    const LearnScreen(),
-    const RoadmapScreen(),
-    const ProjectScreen(),
-  ];
+  late final List<Widget> screen;
+
+  @override
+  void initState() {
+    super.initState();
+
+    screen = [
+      HomeScreen(
+        onNavigate: _changeTab,
+      ),
+      const LearnScreen(),
+      const RoadmapScreen(),
+      const ProjectScreen(),
+    ];
+  }
+
+  void _changeTab(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +44,9 @@ class _MainScreenState extends State<MainScreen> {
       body: screen[selectedIndex],
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: GNav(
           selectedIndex: selectedIndex,
-
-          
 
           onTabChange: (index) {
             setState(() {
@@ -44,22 +55,10 @@ class _MainScreenState extends State<MainScreen> {
           },
 
           tabs: const [
-            GButton(
-              icon: Icons.home,
-              text: 'Home',
-            ),
-            GButton(
-              icon: Icons.menu_book,
-              text: 'Learn',
-            ),
-            GButton(
-              icon: Icons.route,
-              text: 'Roadmap',
-            ),
-            GButton(
-              icon: Icons.code,
-              text: 'Projects',
-            ),
+            GButton(icon: Icons.home, text: 'Home'),
+            GButton(icon: Icons.menu_book, text: 'Learn'),
+            GButton(icon: Icons.route, text: 'Roadmap'),
+            GButton(icon: Icons.code, text: 'Projects'),
           ],
         ),
       ),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final ValueChanged<int> onNavigate;
+
+  const HomeScreen({
+    super.key,
+    required this.onNavigate,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const Text(
               "Hello, 👋",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -0.5),
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.5,
+              ),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -33,11 +42,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 25),
 
-            _AnimatedEntry(delayMs: 0, child: _OverallProgressCard(progress: 0.35)),
+            _AnimatedEntry(
+              delayMs: 0,
+              child: _OverallProgressCard(progress: 0.35),
+            ),
 
             const SizedBox(height: 30),
 
-            const Text("Continue Learning", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text(
+              "Continue Learning",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
 
             _AnimatedEntry(
@@ -55,7 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 30),
 
-            const Text("Today's Goal", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text(
+              "Today's Goal",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
 
             _AnimatedEntry(
@@ -69,7 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 30),
 
-            const Text("Recent Activity", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text(
+              "Recent Activity",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
 
             _AnimatedEntry(
@@ -97,22 +118,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 30),
 
-            const Text("Quick Access", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text(
+              "Quick Access",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
 
             Row(
               children: [
-                Expanded(child: _QuickAccessCard(icon: Icons.menu_book_outlined, title: "Learn", onTap: () {})),
+                Expanded(
+                  child: _QuickAccessCard(
+                    icon: Icons.menu_book_outlined,
+                    title: "Learn",
+                    onTap: () {
+                      widget.onNavigate(1);
+                    },
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _QuickAccessCard(icon: Icons.route_outlined, title: "Roadmap", onTap: () {})),
+                Expanded(
+                  child: _QuickAccessCard(
+                    icon: Icons.route_outlined,
+                    title: "Roadmap",
+                    onTap: () {
+                      widget.onNavigate(2);
+                    },
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: _QuickAccessCard(icon: Icons.code_outlined, title: "Project", onTap: () {})),
+                Expanded(
+                  child: _QuickAccessCard(
+                    icon: Icons.code_outlined,
+                    title: "Project",
+                    onTap: () {
+                      widget.onNavigate(3);
+                    },
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _QuickAccessCard(icon: Icons.person_outlined, title: "Profile", onTap: () {})),
+                Expanded(
+                  child: _QuickAccessCard(
+                    icon: Icons.person_outlined,
+                    title: "Profile",
+                    onTap: () {},
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -133,7 +187,8 @@ class _AnimatedEntry extends StatefulWidget {
   State<_AnimatedEntry> createState() => _AnimatedEntryState();
 }
 
-class _AnimatedEntryState extends State<_AnimatedEntry> with SingleTickerProviderStateMixin {
+class _AnimatedEntryState extends State<_AnimatedEntry>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fade;
   late final Animation<Offset> _slide;
@@ -141,10 +196,15 @@ class _AnimatedEntryState extends State<_AnimatedEntry> with SingleTickerProvide
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _slide = Tween(begin: const Offset(0, 0.06), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _slide = Tween(
+      begin: const Offset(0, 0.06),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     Future.delayed(Duration(milliseconds: widget.delayMs), () {
       if (mounted) _controller.forward();
     });
@@ -183,7 +243,11 @@ class _OverallProgressCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.green.withOpacity(0.14), blurRadius: 20, offset: const Offset(0, 8)),
+          BoxShadow(
+            color: Colors.green.withOpacity(0.14),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
@@ -192,13 +256,20 @@ class _OverallProgressCard extends StatelessWidget {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Overall Progress", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                "Overall Progress",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           const SizedBox(height: 4),
           const Text(
             "Flutter Learning",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF16A34A)),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF16A34A),
+            ),
           ),
           const SizedBox(height: 15),
           ClipRRect(
@@ -211,7 +282,9 @@ class _OverallProgressCard extends StatelessWidget {
                 value: value,
                 minHeight: 10,
                 backgroundColor: Colors.white,
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF16A34A)),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF16A34A),
+                ),
               ),
             ),
           ),
@@ -246,25 +319,49 @@ class _ContinueLearningCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 16, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          Text(subtitle, style: const TextStyle(fontSize: 14, color: Colors.green, height: 1.3)),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.green,
+              height: 1.3,
+            ),
+          ),
           const SizedBox(height: 15),
           Row(
             children: [
               const Icon(Icons.menu_book_outlined, color: Color(0xFF16A34A)),
               const SizedBox(width: 8),
-              Text(lessonLabel, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(
+                lessonLabel,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const Spacer(),
               Text(
                 "${(progress * 100).toInt()}%",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF16A34A)),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF16A34A),
+                ),
               ),
             ],
           ),
@@ -279,7 +376,9 @@ class _ContinueLearningCard extends StatelessWidget {
                 value: value,
                 minHeight: 8,
                 backgroundColor: const Color(0xFFE5E7EB),
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF16A34A)),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF16A34A),
+                ),
               ),
             ),
           ),
@@ -293,9 +392,14 @@ class _ContinueLearningCard extends StatelessWidget {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 13),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text("Continue Learning", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              child: const Text(
+                "Continue Learning",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
@@ -309,7 +413,11 @@ class _TodaysGoalCard extends StatelessWidget {
   final String subtitle;
   final double progress;
 
-  const _TodaysGoalCard({required this.title, required this.subtitle, required this.progress});
+  const _TodaysGoalCard({
+    required this.title,
+    required this.subtitle,
+    required this.progress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -328,16 +436,31 @@ class _TodaysGoalCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(color: Color(0xFFDCFCE7), shape: BoxShape.circle),
-                child: const Icon(Icons.flag_circle_outlined, color: Color(0xFF16A34A)),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFDCFCE7),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.flag_circle_outlined,
+                  color: Color(0xFF16A34A),
+                ),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
                 ],
               ),
             ],
@@ -353,7 +476,9 @@ class _TodaysGoalCard extends StatelessWidget {
                 value: value,
                 minHeight: 9,
                 backgroundColor: Colors.white,
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF16A34A)),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF16A34A),
+                ),
               ),
             ),
           ),
@@ -362,7 +487,11 @@ class _TodaysGoalCard extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: Text(
               "${(progress * 100).toInt()}%",
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF16A34A)),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF16A34A),
+              ),
             ),
           ),
         ],
@@ -376,7 +505,11 @@ class _ActivityItem {
   final String title;
   final String time;
 
-  const _ActivityItem({required this.icon, required this.title, required this.time});
+  const _ActivityItem({
+    required this.icon,
+    required this.title,
+    required this.time,
+  });
 }
 
 class _RecentActivityCard extends StatelessWidget {
@@ -393,7 +526,11 @@ class _RecentActivityCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 16, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
@@ -403,17 +540,35 @@ class _RecentActivityCard extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(color: Color(0xFFDCFCE7), shape: BoxShape.circle),
-                  child: Icon(items[i].icon, color: const Color(0xFF16A34A)), // fixed: was same as bg, invisible
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFDCFCE7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    items[i].icon,
+                    color: const Color(0xFF16A34A),
+                  ), // fixed: was same as bg, invisible
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(items[i].title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text(
+                        items[i].title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text(items[i].time, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+                      Text(
+                        items[i].time,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -432,7 +587,11 @@ class _QuickAccessCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _QuickAccessCard({required this.icon, required this.title, required this.onTap});
+  const _QuickAccessCard({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -441,7 +600,11 @@ class _QuickAccessCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Material(
@@ -458,11 +621,20 @@ class _QuickAccessCard extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(color: Color(0xFFDCFCE7), shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFDCFCE7),
+                    shape: BoxShape.circle,
+                  ),
                   child: Icon(icon, size: 26, color: const Color(0xFF16A34A)),
                 ),
                 const SizedBox(height: 10),
-                Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
