@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_flow/models/lesson.dart';
@@ -17,6 +16,10 @@ class _LearnScreenState extends State<LearnScreen> {
   double dartProgress = 0.0;
   double gitProgress = 0.0;
 
+  // ------------------------------------------------------------
+  // Get course progress
+  // ------------------------------------------------------------
+
   Future<double> getCourseProgress(
     String courseTitle,
     int totalLessons,
@@ -30,22 +33,35 @@ class _LearnScreenState extends State<LearnScreen> {
       return 0.0;
     }
 
-    return savedLessons.length / totalLessons;
+    // Remove duplicate / invalid indexes.
+    final completedLessons = savedLessons
+        .map(int.tryParse)
+        .whereType<int>()
+        .where(
+          (index) => index >= 0 && index < totalLessons,
+        )
+        .toSet();
+
+    return completedLessons.length / totalLessons;
   }
+
+  // ------------------------------------------------------------
+  // Load all course progress
+  // ------------------------------------------------------------
 
   Future<void> loadProgress() async {
     final flutter = await getCourseProgress(
-      "Flutter Basics",
+      'Flutter Basics',
       flutterLessons.length,
     );
 
     final dart = await getCourseProgress(
-      "Dart Programming",
+      'Dart Programming',
       dartLessons.length,
     );
 
     final git = await getCourseProgress(
-      "Git & GitHub",
+      'Git & GitHub',
       gitLessons.length,
     );
 
@@ -58,28 +74,38 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
+  // ------------------------------------------------------------
+  // Initial load
+  // ------------------------------------------------------------
+
   @override
   void initState() {
     super.initState();
     loadProgress();
   }
 
+  // ------------------------------------------------------------
+  // Build UI
+  // ------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAF9),
+
       appBar: AppBar(
-        title: const Text("Learn"),
+        title: const Text('Learn'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Start Learning 📚",
+              'Start Learning 📚',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
@@ -90,7 +116,7 @@ class _LearnScreenState extends State<LearnScreen> {
             const SizedBox(height: 8),
 
             Text(
-              "Choose a topic and continue your learning journey.",
+              'Choose a topic and continue your learning journey.',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey.shade600,
@@ -109,7 +135,7 @@ class _LearnScreenState extends State<LearnScreen> {
             const SizedBox(height: 28),
 
             const Text(
-              "Courses",
+              'Courses',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -118,15 +144,19 @@ class _LearnScreenState extends State<LearnScreen> {
 
             const SizedBox(height: 16),
 
+            // --------------------------------------------------
+            // Flutter Basics
+            // --------------------------------------------------
+
             _AnimatedEntry(
               delayMs: 0,
               child: _CourseCard(
                 icon: Icons.flutter_dash,
-                title: "Flutter Basics",
+                title: 'Flutter Basics',
                 lessonsCount: flutterLessons.length,
                 progress: flutterProgress,
                 onTap: () => _openCourse(
-                  "Flutter Basics",
+                  'Flutter Basics',
                   flutterLessons,
                 ),
               ),
@@ -134,15 +164,19 @@ class _LearnScreenState extends State<LearnScreen> {
 
             const SizedBox(height: 14),
 
+            // --------------------------------------------------
+            // Dart Programming
+            // --------------------------------------------------
+
             _AnimatedEntry(
               delayMs: 90,
               child: _CourseCard(
                 icon: Icons.code,
-                title: "Dart Programming",
+                title: 'Dart Programming',
                 lessonsCount: dartLessons.length,
                 progress: dartProgress,
                 onTap: () => _openCourse(
-                  "Dart Programming",
+                  'Dart Programming',
                   dartLessons,
                 ),
               ),
@@ -150,15 +184,19 @@ class _LearnScreenState extends State<LearnScreen> {
 
             const SizedBox(height: 14),
 
+            // --------------------------------------------------
+            // Git & GitHub
+            // --------------------------------------------------
+
             _AnimatedEntry(
               delayMs: 180,
               child: _CourseCard(
                 icon: Icons.source,
-                title: "Git & GitHub",
+                title: 'Git & GitHub',
                 lessonsCount: gitLessons.length,
                 progress: gitProgress,
                 onTap: () => _openCourse(
-                  "Git & GitHub",
+                  'Git & GitHub',
                   gitLessons,
                 ),
               ),
@@ -169,11 +207,15 @@ class _LearnScreenState extends State<LearnScreen> {
     );
   }
 
+  // ------------------------------------------------------------
+  // Open course
+  // ------------------------------------------------------------
+
   Future<void> _openCourse(
     String title,
     List<Lesson> lessons,
   ) async {
-    final completedCount = await Navigator.push<int>(
+    await Navigator.push<int>(
       context,
       MaterialPageRoute(
         builder: (context) => LessonScreen(
@@ -185,30 +227,15 @@ class _LearnScreenState extends State<LearnScreen> {
     );
 
     if (!mounted) return;
-Future<void> openCourse(
-  String title,
-  List<Lesson> lessons,
-) async {
-  await Navigator.push<int>(
-    context,
-    MaterialPageRoute(
-      builder: (context) => LessonScreen(
-        title: title,
-        lessonCount: lessons.length,
-        lessons: lessons,
-      ),
-    ),
-  );
 
-  if (!mounted) return;
-
-  await loadProgress();
+    // Reload progress after returning from LessonScreen.
+    await loadProgress();
+  }
 }
 
-
-
-}
-}
+// ================================================================
+// CONTINUE LEARNING BANNER
+// ================================================================
 
 class _ContinueLearningBanner extends StatelessWidget {
   final VoidCallback onTap;
@@ -251,21 +278,26 @@ class _ContinueLearningBanner extends StatelessWidget {
             child: Row(
               children: [
                 _ContinueLearningIcon(),
+
                 SizedBox(width: 16),
+
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Continue Learning",
+                        'Continue Learning',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
                       SizedBox(height: 6),
+
                       Text(
-                        "Flutter Basics",
+                        'Flutter Basics',
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.black54,
@@ -274,6 +306,7 @@ class _ContinueLearningBanner extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
@@ -286,6 +319,10 @@ class _ContinueLearningBanner extends StatelessWidget {
     );
   }
 }
+
+// ================================================================
+// CONTINUE LEARNING ICON
+// ================================================================
 
 class _ContinueLearningIcon extends StatelessWidget {
   const _ContinueLearningIcon();
@@ -314,6 +351,10 @@ class _ContinueLearningIcon extends StatelessWidget {
   }
 }
 
+// ================================================================
+// ANIMATED ENTRY
+// ================================================================
+
 class _AnimatedEntry extends StatefulWidget {
   final Widget child;
   final int delayMs;
@@ -324,7 +365,8 @@ class _AnimatedEntry extends StatefulWidget {
   });
 
   @override
-  State<_AnimatedEntry> createState() => _AnimatedEntryState();
+  State<_AnimatedEntry> createState() =>
+      _AnimatedEntryState();
 }
 
 class _AnimatedEntryState extends State<_AnimatedEntry>
@@ -339,7 +381,9 @@ class _AnimatedEntryState extends State<_AnimatedEntry>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 420),
+      duration: const Duration(
+        milliseconds: 420,
+      ),
     );
 
     _fade = CurvedAnimation(
@@ -385,6 +429,10 @@ class _AnimatedEntryState extends State<_AnimatedEntry>
   }
 }
 
+// ================================================================
+// COURSE CARD
+// ================================================================
+
 class _CourseCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -425,18 +473,21 @@ class _CourseCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(18),
           splashColor: Colors.green.withOpacity(0.08),
-          highlightColor: Colors.green.withOpacity(0.04),
+          highlightColor:
+              Colors.green.withOpacity(0.04),
           child: Padding(
             padding: const EdgeInsets.all(18),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
+                        gradient:
+                            const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
@@ -444,12 +495,15 @@ class _CourseCard extends StatelessWidget {
                             Color(0xFFBBF7D0),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius:
+                            BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.green.withOpacity(0.15),
+                            color: Colors.green
+                                .withOpacity(0.15),
                             blurRadius: 8,
-                            offset: const Offset(0, 3),
+                            offset:
+                                const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -464,20 +518,26 @@ class _CourseCard extends StatelessWidget {
 
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           Text(
                             title,
-                            style: const TextStyle(
+                            style:
+                                const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight:
+                                  FontWeight.bold,
                             ),
                           ),
+
                           const SizedBox(height: 5),
+
                           Text(
-                            "$lessonsCount Lessons",
+                            '$lessonsCount Lessons',
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color:
+                                  Colors.grey.shade600,
                               fontSize: 14,
                             ),
                           ),
@@ -499,14 +559,20 @@ class _CourseCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: TweenAnimationBuilder<double>(
+                        borderRadius:
+                            BorderRadius.circular(10),
+                        child:
+                            TweenAnimationBuilder<double>(
                           tween: Tween<double>(
                             begin: 0,
                             end: progress,
                           ),
-                          duration: const Duration(milliseconds: 600),
-                          curve: Curves.easeOutCubic,
+                          duration:
+                              const Duration(
+                            milliseconds: 600,
+                          ),
+                          curve:
+                              Curves.easeOutCubic,
                           builder: (
                             context,
                             value,
@@ -515,7 +581,8 @@ class _CourseCard extends StatelessWidget {
                             return LinearProgressIndicator(
                               value: value,
                               minHeight: 7,
-                              backgroundColor: Colors.grey.shade200,
+                              backgroundColor:
+                                  Colors.grey.shade200,
                               color: Colors.green,
                             );
                           },
@@ -526,8 +593,9 @@ class _CourseCard extends StatelessWidget {
                     const SizedBox(width: 12),
 
                     Text(
-                      "${(progress * 100).toInt()}%",
-                      style: const TextStyle(
+                      '${(progress * 100).toInt()}%',
+                      style:
+                          const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),

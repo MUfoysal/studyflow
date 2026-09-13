@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:study_flow/models/lesson.dart';
+
 class RoadmapStep {
   final String number;
   final String title;
@@ -21,19 +23,19 @@ class RoadmapScreen extends StatefulWidget {
 
   static const List<RoadmapStep> _steps = [
     RoadmapStep(
-      number: "01",
-      title: "Dart Programming",
-      subtitle: "Learn the fundamentals of Dart.",
+      number: '01',
+      title: 'Dart Programming',
+      subtitle: 'Learn the fundamentals of Dart.',
     ),
     RoadmapStep(
-      number: "02",
-      title: "Flutter Basics",
-      subtitle: "Learn widgets and build Flutter UI.",
+      number: '02',
+      title: 'Flutter Basics',
+      subtitle: 'Learn widgets and build Flutter UI.',
     ),
     RoadmapStep(
-      number: "03",
-      title: "Git & GitHub",
-      subtitle: "Learn version control and collaboration.",
+      number: '03',
+      title: 'Git & GitHub',
+      subtitle: 'Learn version control and collaboration.',
     ),
   ];
 
@@ -50,21 +52,63 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
     _loadCompletedSteps();
   }
 
+  // ------------------------------------------------------------
+  // Get lessons for each roadmap step
+  // ------------------------------------------------------------
+
+  List<Lesson> _getLessonsForStep(String title) {
+    switch (title) {
+      case 'Dart Programming':
+        return dartLessons;
+
+      case 'Flutter Basics':
+        return flutterLessons;
+
+      case 'Git & GitHub':
+        return gitLessons;
+
+      default:
+        return [];
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Load roadmap progress from lesson completion
+  // ------------------------------------------------------------
+
   Future<void> _loadCompletedSteps() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final savedSteps =
-        prefs.getStringList('completed_roadmap_steps') ?? [];
+    final completedIndexes = <int>{};
 
-    final loadedSteps = <int>{};
+    for (int index = 0;
+        index < RoadmapScreen._steps.length;
+        index++) {
+      final step = RoadmapScreen._steps[index];
 
-    for (final value in savedSteps) {
-      final index = int.tryParse(value);
+      final lessons = _getLessonsForStep(step.title);
 
-      if (index != null &&
-          index >= 0 &&
-          index < RoadmapScreen._steps.length) {
-        loadedSteps.add(index);
+      if (lessons.isEmpty) {
+        continue;
+      }
+
+      final savedLessons =
+          prefs.getStringList('completed_${step.title}') ?? [];
+
+      final completedLessons = savedLessons
+          .map(int.tryParse)
+          .whereType<int>()
+          .where(
+            (lessonIndex) =>
+                lessonIndex >= 0 &&
+                lessonIndex < lessons.length,
+          )
+          .toSet();
+
+      // Course is completed only when
+      // all lessons of that course are completed.
+      if (completedLessons.length == lessons.length) {
+        completedIndexes.add(index);
       }
     }
 
@@ -73,20 +117,13 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
     setState(() {
       _completedSteps
         ..clear()
-        ..addAll(loadedSteps);
+        ..addAll(completedIndexes);
     });
   }
 
-  Future<void> _saveCompletedSteps() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setStringList(
-      'completed_roadmap_steps',
-      _completedSteps
-          .map((index) => index.toString())
-          .toList(),
-    );
-  }
+  // ------------------------------------------------------------
+  // Open roadmap detail
+  // ------------------------------------------------------------
 
   Future<void> _onStepTap(
     BuildContext context,
@@ -101,19 +138,21 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
       completed: _completedSteps.contains(stepIndex),
     );
 
-    final result = await Navigator.of(context).pushNamed(
+    await Navigator.of(context).pushNamed(
       '/roadmap-detail',
       arguments: step,
     );
 
-    if (result == true && !_completedSteps.contains(stepIndex)) {
-      setState(() {
-        _completedSteps.add(stepIndex);
-      });
+    // When user comes back from Roadmap Detail,
+    // reload the latest lesson completion state.
+    if (!mounted) return;
 
-      await _saveCompletedSteps();
-    }
+    await _loadCompletedSteps();
   }
+
+  // ------------------------------------------------------------
+  // UI
+  // ------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +166,7 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
       backgroundColor: const Color(0xFFF8FAF9),
 
       appBar: AppBar(
-        title: const Text("Roadmap"),
+        title: const Text('Roadmap'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -140,8 +179,11 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
           24,
         ),
         itemCount: RoadmapScreen._steps.length + 1,
-
         itemBuilder: (context, index) {
+          // ----------------------------------------------------
+          // Header
+          // ----------------------------------------------------
+
           if (index == 0) {
             return _RoadmapHeader(
               progress: progress,
@@ -150,7 +192,12 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
             );
           }
 
+          // ----------------------------------------------------
+          // Roadmap step
+          // ----------------------------------------------------
+
           final stepIndex = index - 1;
+
           final baseStep = RoadmapScreen._steps[stepIndex];
 
           final step = RoadmapStep(
@@ -179,6 +226,10 @@ class _RoadmapScreenState extends State<RoadmapScreen> {
     );
   }
 }
+
+// ================================================================
+// ROADMAP HEADER
+// ================================================================
 
 class _RoadmapHeader extends StatelessWidget {
   final double progress;
@@ -210,7 +261,7 @@ class _RoadmapHeader extends StatelessWidget {
               ).createShader(bounds);
             },
             child: Text(
-              "Flutter Developer Roadmap 🚀",
+              'Flutter Developer Roadmap 🚀',
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
@@ -222,7 +273,7 @@ class _RoadmapHeader extends StatelessWidget {
           const SizedBox(height: 8),
 
           Text(
-            "Follow the roadmap step by step and build your Flutter development skills.",
+            'Follow the roadmap step by step and build your Flutter development skills.',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: Colors.grey.shade600,
               height: 1.4,
@@ -268,7 +319,7 @@ class _RoadmapHeader extends StatelessWidget {
               const SizedBox(width: 12),
 
               Text(
-                "$completedCount/$total",
+                '$completedCount/$total',
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF15803D),
@@ -282,6 +333,10 @@ class _RoadmapHeader extends StatelessWidget {
   }
 }
 
+// ================================================================
+// ANIMATED ENTRY
+// ================================================================
+
 class _AnimatedEntry extends StatefulWidget {
   final Widget child;
   final int delayMs;
@@ -292,7 +347,8 @@ class _AnimatedEntry extends StatefulWidget {
   });
 
   @override
-  State<_AnimatedEntry> createState() => _AnimatedEntryState();
+  State<_AnimatedEntry> createState() =>
+      _AnimatedEntryState();
 }
 
 class _AnimatedEntryState extends State<_AnimatedEntry>
@@ -355,6 +411,10 @@ class _AnimatedEntryState extends State<_AnimatedEntry>
   }
 }
 
+// ================================================================
+// ROADMAP CARD
+// ================================================================
+
 class _RoadmapCard extends StatelessWidget {
   final RoadmapStep step;
   final bool showConnector;
@@ -374,6 +434,10 @@ class _RoadmapCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ------------------------------------------------------
+          // Connector
+          // ------------------------------------------------------
+
           Column(
             children: [
               Container(
@@ -413,6 +477,10 @@ class _RoadmapCard extends StatelessWidget {
 
           const SizedBox(width: 14),
 
+          // ------------------------------------------------------
+          // Card
+          // ------------------------------------------------------
+
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(
@@ -426,7 +494,8 @@ class _RoadmapCard extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color:
+                        Colors.black.withOpacity(0.04),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -434,9 +503,11 @@ class _RoadmapCard extends StatelessWidget {
               ),
               child: Material(
                 color: Colors.transparent,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius:
+                    BorderRadius.circular(18),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius:
+                      BorderRadius.circular(18),
                   onTap: onTap,
                   splashColor:
                       Colors.green.withOpacity(0.08),
@@ -446,6 +517,10 @@ class _RoadmapCard extends StatelessWidget {
                     padding: const EdgeInsets.all(18),
                     child: Row(
                       children: [
+                        // ------------------------------------------------
+                        // Number / Completed Icon
+                        // ------------------------------------------------
+
                         Container(
                           width: 48,
                           height: 48,
@@ -453,15 +528,19 @@ class _RoadmapCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             gradient:
                                 const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              begin:
+                                  Alignment.topLeft,
+                              end:
+                                  Alignment.bottomRight,
                               colors: [
                                 Color(0xFFDCFCE7),
                                 Color(0xFFBBF7D0),
                               ],
                             ),
                             borderRadius:
-                                BorderRadius.circular(14),
+                                BorderRadius.circular(
+                              14,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.green
@@ -482,8 +561,7 @@ class _RoadmapCard extends StatelessWidget {
                                   step.number,
                                   style:
                                       const TextStyle(
-                                    color:
-                                        Colors.green,
+                                    color: Colors.green,
                                     fontWeight:
                                         FontWeight.bold,
                                     fontSize: 16,
@@ -493,6 +571,10 @@ class _RoadmapCard extends StatelessWidget {
 
                         const SizedBox(width: 18),
 
+                        // ------------------------------------------------
+                        // Text
+                        // ------------------------------------------------
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment:
@@ -501,7 +583,8 @@ class _RoadmapCard extends StatelessWidget {
                               Text(
                                 step.title,
                                 style: theme
-                                    .textTheme.titleMedium
+                                    .textTheme
+                                    .titleMedium
                                     ?.copyWith(
                                   fontWeight:
                                       FontWeight.bold,
@@ -524,9 +607,14 @@ class _RoadmapCard extends StatelessWidget {
                           ),
                         ),
 
+                        // ------------------------------------------------
+                        // Arrow / Completed Icon
+                        // ------------------------------------------------
+
                         Icon(
                           step.completed
-                              ? Icons.check_circle_rounded
+                              ? Icons
+                                  .check_circle_rounded
                               : Icons
                                   .chevron_right_rounded,
                           color: step.completed
