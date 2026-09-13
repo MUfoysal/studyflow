@@ -185,7 +185,7 @@ class _LearnScreenState extends State<LearnScreen> {
     );
 
     if (!mounted) return;
-Future<void> _openCourse(
+Future<void> openCourse(
   String title,
   List<Lesson> lessons,
 ) async {

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:study_flow/models/lesson.dart';
 import 'package:study_flow/screens/lesson_details_screen.dart';
 
@@ -26,10 +27,10 @@ class _LessonScreenState extends State<LessonScreen> {
   @override
   void initState() {
     super.initState();
-    loadCompletedLessons();
+    _loadCompletedLessons();
   }
 
-  Future<void> loadCompletedLessons() async {
+  Future<void> _loadCompletedLessons() async {
     final prefs = await SharedPreferences.getInstance();
 
     final savedLessons =
@@ -80,12 +81,9 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final progress = widget.lessons.isEmpty
-        ? 0.0
-        : completedLessons.length / widget.lessons.length;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAF9),
+
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Colors.transparent,
@@ -95,6 +93,7 @@ class _LessonScreenState extends State<LessonScreen> {
           onPressed: _goBack,
         ),
       ),
+
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(
           16,
@@ -102,26 +101,18 @@ class _LessonScreenState extends State<LessonScreen> {
           16,
           16,
         ),
-        itemCount: widget.lessons.length + 1,
+        itemCount: widget.lessons.length,
         itemBuilder: (context, index) {
-          if (index == 0) {
-            return _ProgressHeader(
-              completed: completedLessons.length,
-              total: widget.lessons.length,
-              progress: progress,
-            );
-          }
+          final lesson = widget.lessons[index];
 
-          final i = index - 1;
-          final lesson = widget.lessons[i];
-          final isLast = i == widget.lessons.length - 1;
+          final isLast = index == widget.lessons.length - 1;
 
           return _AnimatedEntry(
-            delayMs: i * 60,
+            delayMs: index * 60,
             child: _LessonTile(
-              number: i + 1,
+              number: index + 1,
               title: lesson.title,
-              isCompleted: completedLessons.contains(i),
+              isCompleted: completedLessons.contains(index),
               showConnector: !isLast,
               onTap: () {
                 Navigator.push(
@@ -130,11 +121,11 @@ class _LessonScreenState extends State<LessonScreen> {
                     builder: (context) => LessonDetailsScreen(
                       courseTitle: widget.title,
                       lessonTitle: lesson.title,
-                      lessonNumber: i + 1,
+                      lessonNumber: index + 1,
                       description: lesson.description,
                       keyPoints: lesson.keyPoints,
                       exampleCode: lesson.exampleCode,
-                      onComplete: () => _markComplete(i),
+                      onComplete: () => _markComplete(index),
                     ),
                   ),
                 );
@@ -142,96 +133,6 @@ class _LessonScreenState extends State<LessonScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _ProgressHeader extends StatelessWidget {
-  final int completed;
-  final int total;
-  final double progress;
-
-  const _ProgressHeader({
-    required this.completed,
-    required this.total,
-    required this.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFDCFCE7),
-            Color(0xFFC7F3D8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.green.withOpacity(0.14),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "$completed of $total lessons done",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF15803D),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(
-                      begin: 0,
-                      end: progress,
-                    ),
-                    duration: const Duration(milliseconds: 700),
-                    curve: Curves.easeOutCubic,
-                    builder: (context, value, _) {
-                      return LinearProgressIndicator(
-                        value: value,
-                        minHeight: 8,
-                        backgroundColor: Colors.white,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF16A34A),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 14),
-          Text(
-            "${(progress * 100).toInt()}%",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF16A34A),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -341,6 +242,7 @@ class _LessonTile extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
+
               if (showConnector)
                 Expanded(
                   child: Container(
@@ -355,7 +257,9 @@ class _LessonTile extends StatelessWidget {
                 ),
             ],
           ),
+
           const SizedBox(width: 12),
+
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
@@ -373,35 +277,42 @@ class _LessonTile extends StatelessWidget {
                   ),
                 ],
               ),
+
               child: Material(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
+
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
                   onTap: onTap,
                   splashColor: Colors.green.withOpacity(0.08),
+
                   child: Padding(
                     padding: const EdgeInsets.all(14),
+
                     child: Row(
                       children: [
                         CircleAvatar(
                           backgroundColor: isCompleted
                               ? Colors.green
                               : const Color(0xFFDCFCE7),
+
                           child: isCompleted
                               ? const Icon(
                                   Icons.check,
                                   color: Colors.white,
                                 )
                               : Text(
-                                  "$number",
+                                  '$number',
                                   style: const TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                         ),
+
                         const SizedBox(width: 14),
+
                         Expanded(
                           child: Text(
                             title,
@@ -411,6 +322,7 @@ class _LessonTile extends StatelessWidget {
                             ),
                           ),
                         ),
+
                         Icon(
                           isCompleted
                               ? Icons.check_circle
