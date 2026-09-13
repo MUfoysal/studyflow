@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoadmapStep {
   final String number;
@@ -14,7 +16,7 @@ class RoadmapStep {
   });
 }
 
-class RoadmapScreen extends StatelessWidget {
+class RoadmapScreen extends StatefulWidget {
   const RoadmapScreen({super.key});
 
   static const List<RoadmapStep> _steps = [
@@ -35,32 +37,101 @@ class RoadmapScreen extends StatelessWidget {
     ),
   ];
 
-  void _onStepTap(
+  @override
+  State<RoadmapScreen> createState() => _RoadmapScreenState();
+}
+
+class _RoadmapScreenState extends State<RoadmapScreen> {
+  final Set<int> _completedSteps = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedSteps();
+  }
+
+  Future<void> _loadCompletedSteps() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final savedSteps =
+        prefs.getStringList('completed_roadmap_steps') ?? [];
+
+    final loadedSteps = <int>{};
+
+    for (final value in savedSteps) {
+      final index = int.tryParse(value);
+
+      if (index != null &&
+          index >= 0 &&
+          index < RoadmapScreen._steps.length) {
+        loadedSteps.add(index);
+      }
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _completedSteps
+        ..clear()
+        ..addAll(loadedSteps);
+    });
+  }
+
+  Future<void> _saveCompletedSteps() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setStringList(
+      'completed_roadmap_steps',
+      _completedSteps
+          .map((index) => index.toString())
+          .toList(),
+    );
+  }
+
+  Future<void> _onStepTap(
     BuildContext context,
-    RoadmapStep step,
-  ) {
-    Navigator.of(context).pushNamed(
+    int stepIndex,
+  ) async {
+    final baseStep = RoadmapScreen._steps[stepIndex];
+
+    final step = RoadmapStep(
+      number: baseStep.number,
+      title: baseStep.title,
+      subtitle: baseStep.subtitle,
+      completed: _completedSteps.contains(stepIndex),
+    );
+
+    final result = await Navigator.of(context).pushNamed(
       '/roadmap-detail',
       arguments: step,
     );
+
+    if (result == true && !_completedSteps.contains(stepIndex)) {
+      setState(() {
+        _completedSteps.add(stepIndex);
+      });
+
+      await _saveCompletedSteps();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final completedCount =
-        _steps.where((step) => step.completed).length;
+    final completedCount = _completedSteps.length;
 
-    final progress = _steps.isEmpty
+    final progress = RoadmapScreen._steps.isEmpty
         ? 0.0
-        : completedCount / _steps.length;
+        : completedCount / RoadmapScreen._steps.length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAF9),
+
       appBar: AppBar(
         title: const Text("Roadmap"),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(
           16,
@@ -68,19 +139,29 @@ class RoadmapScreen extends StatelessWidget {
           16,
           24,
         ),
-        itemCount: _steps.length + 1,
+        itemCount: RoadmapScreen._steps.length + 1,
+
         itemBuilder: (context, index) {
           if (index == 0) {
             return _RoadmapHeader(
               progress: progress,
               completedCount: completedCount,
-              total: _steps.length,
+              total: RoadmapScreen._steps.length,
             );
           }
 
           final stepIndex = index - 1;
-          final step = _steps[stepIndex];
-          final isLast = stepIndex == _steps.length - 1;
+          final baseStep = RoadmapScreen._steps[stepIndex];
+
+          final step = RoadmapStep(
+            number: baseStep.number,
+            title: baseStep.title,
+            subtitle: baseStep.subtitle,
+            completed: _completedSteps.contains(stepIndex),
+          );
+
+          final isLast =
+              stepIndex == RoadmapScreen._steps.length - 1;
 
           return _AnimatedEntry(
             delayMs: stepIndex * 90,
@@ -89,7 +170,7 @@ class RoadmapScreen extends StatelessWidget {
               showConnector: !isLast,
               onTap: () => _onStepTap(
                 context,
-                step,
+                stepIndex,
               ),
             ),
           );
@@ -211,8 +292,7 @@ class _AnimatedEntry extends StatefulWidget {
   });
 
   @override
-  State<_AnimatedEntry> createState() =>
-      _AnimatedEntryState();
+  State<_AnimatedEntry> createState() => _AnimatedEntryState();
 }
 
 class _AnimatedEntryState extends State<_AnimatedEntry>
@@ -294,7 +374,6 @@ class _RoadmapCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Timeline rail
           Column(
             children: [
               Container(
@@ -403,7 +482,8 @@ class _RoadmapCard extends StatelessWidget {
                                   step.number,
                                   style:
                                       const TextStyle(
-                                    color: Colors.green,
+                                    color:
+                                        Colors.green,
                                     fontWeight:
                                         FontWeight.bold,
                                     fontSize: 16,
@@ -445,8 +525,13 @@ class _RoadmapCard extends StatelessWidget {
                         ),
 
                         Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.grey.shade400,
+                          step.completed
+                              ? Icons.check_circle_rounded
+                              : Icons
+                                  .chevron_right_rounded,
+                          color: step.completed
+                              ? Colors.green
+                              : Colors.grey.shade400,
                         ),
                       ],
                     ),
