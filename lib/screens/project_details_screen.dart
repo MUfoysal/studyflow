@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+
+import 'package:study_flow/models/project.dart';
+
+class ProjectDetailsScreen extends StatelessWidget {
+  final Project project;
+
+  const ProjectDetailsScreen({super.key, required this.project});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAF9),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF111827),
+        elevation: 0,
+        title: Text(project.title),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          _buildHeader(),
+
+          const SizedBox(height: 24),
+
+          _buildSection(
+            title: 'Overview',
+            child: Text(project.description, style: _bodyStyle()),
+          ),
+
+          _buildSection(
+            title: 'Why Build This?',
+            child: Text(project.whyBuild, style: _bodyStyle()),
+          ),
+
+          _buildSection(
+            title: 'Features',
+            child: _buildBulletList(project.features),
+          ),
+
+          _buildSection(
+            title: 'Technologies',
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: project.technologies
+                  .map((technology) => _buildTechnologyChip(technology))
+                  .toList(),
+            ),
+          ),
+
+          _buildSection(
+            title: 'Folder Structure',
+            child: _buildCodeBlock(project.folderStructure),
+          ),
+
+          _buildSection(
+            title: 'Important Files',
+            child: _buildBulletList(project.importantFiles),
+          ),
+
+          _buildSection(
+            title: 'Bad Practices ❌',
+            child: _buildBulletList(project.badPractices),
+          ),
+
+          _buildSection(
+            title: 'Good Practices ✅',
+            child: _buildBulletList(project.goodPractices),
+          ),
+
+          _buildSection(
+            title: 'What You Learn',
+            child: Text(project.whatYouLearn, style: _bodyStyle()),
+          ),
+
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.code, size: 42, color: Color(0xFF16A34A)),
+
+          const SizedBox(height: 14),
+
+          Text(
+            project.title,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF111827),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            project.difficulty,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF16A34A),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection({required String title, required Widget child}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF111827),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBulletList(List<String> items) {
+    return Column(
+      children: items
+          .map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '•',
+                    style: TextStyle(fontSize: 18, color: Color(0xFF16A34A)),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  Expanded(child: Text(item, style: _bodyStyle())),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildTechnologyChip(String technology) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF4),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        technology,
+        style: const TextStyle(
+          fontSize: 13,
+          color: Color(0xFF166534),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCodeBlock(String code) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          code,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            height: 1.5,
+            fontFamily: 'monospace',
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextStyle _bodyStyle() {
+    return const TextStyle(fontSize: 14, color: Color(0xFF4B5563), height: 1.6);
+  }
+}
