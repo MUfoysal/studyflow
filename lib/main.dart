@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:study_flow/screens/main_screen.dart';
 import 'package:study_flow/screens/roadmap_screen.dart';
 import 'package:study_flow/screens/roadmap_detail_screen.dart';
 import 'package:study_flow/screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const StudyFlowApp());
 }
 
@@ -21,9 +28,7 @@ class StudyFlowApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
 
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF16A34A),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF16A34A)),
 
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
@@ -40,22 +45,15 @@ class StudyFlowApp extends StatelessWidget {
         },
 
         '/roadmap-detail': (context) {
-          final arguments =
-              ModalRoute.of(context)?.settings.arguments;
+          final arguments = ModalRoute.of(context)?.settings.arguments;
 
           if (arguments is! RoadmapStep) {
             return const Scaffold(
-              body: Center(
-                child: Text(
-                  "Roadmap step data not found.",
-                ),
-              ),
+              body: Center(child: Text("Roadmap step data not found.")),
             );
           }
 
-          return RoadmapDetailScreen(
-            step: arguments,
-          );
+          return RoadmapDetailScreen(step: arguments);
         },
       },
     );
