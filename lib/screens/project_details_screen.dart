@@ -3,6 +3,7 @@ import 'package:study_flow/models/project.dart';
 import 'package:study_flow/widgets/bullet_list.dart';
 import 'package:study_flow/widgets/project_section.dart';
 import 'package:study_flow/widgets/technology_chip.dart';
+import 'package:study_flow/widgets/code_block.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
   final Project project;
@@ -53,7 +54,7 @@ class ProjectDetailsScreen extends StatelessWidget {
 
           ProjectSection(
             title: 'Folder Structure',
-            child: _buildCodeBlock(project.folderStructure),
+            child: CodeBlock(code: project.folderStructure),
           ),
 
           ProjectSection(
@@ -113,30 +114,6 @@ class ProjectDetailsScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-
-  Widget _buildCodeBlock(String code) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF111827),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Text(
-          code,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 13,
-            height: 1.5,
-            fontFamily: 'monospace',
-          ),
-        ),
       ),
     );
   }
