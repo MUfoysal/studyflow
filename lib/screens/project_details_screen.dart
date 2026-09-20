@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_flow/models/project.dart';
+import 'package:study_flow/widgets/bullet_list.dart';
 import 'package:study_flow/widgets/project_section.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
@@ -44,7 +45,9 @@ class ProjectDetailsScreen extends StatelessWidget {
 
           ProjectSection(
             title: 'Features',
-            child: _buildBulletList(project.features),
+            child: BulletList(
+              items: project.features,
+            ),
           ),
 
           ProjectSection(
@@ -67,17 +70,23 @@ class ProjectDetailsScreen extends StatelessWidget {
 
           ProjectSection(
             title: 'Important Files',
-            child: _buildBulletList(project.importantFiles),
+            child: BulletList(
+              items: project.importantFiles,
+            ),
           ),
 
           ProjectSection(
             title: 'Bad Practices ❌',
-            child: _buildBulletList(project.badPractices),
+            child: BulletList(
+              items: project.badPractices,
+            ),
           ),
 
           ProjectSection(
             title: 'Good Practices ✅',
-            child: _buildBulletList(project.goodPractices),
+            child: BulletList(
+              items: project.goodPractices,
+            ),
           ),
 
           ProjectSection(
@@ -132,36 +141,6 @@ class ProjectDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-  Widget _buildBulletList(List<String> items) {
-    return Column(
-      children: items
-          .map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '•',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFF16A34A),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      item,
-                      style: _bodyStyle(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-          .toList(),
     );
   }
 
