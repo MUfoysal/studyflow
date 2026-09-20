@@ -9,14 +9,9 @@ class CodeBlock extends StatelessWidget {
   });
 
   static const _ink = Color(0xFF111827);
-  static const _edge = Color(0x1FFFFFFF); 
-  static const _bar = Color(0x0AFFFFFF); 
-  static const _sheen = Color(0x0FFFFFFF); 
-  static const _clear = Color(0x00FFFFFF);
-  static const _rim = Color(0x38FFFFFF); 
-  static const _select = Color(0x33FFFFFF); 
-  static const _ambient = Color(0x33111827); 
-  static const _contact = Color(0x1F111827); 
+  static const _edge = Color(0x1FFFFFFF); // white, ~12% alpha
+  static const _bar = Color(0x0AFFFFFF); // white, ~4% alpha
+  static const _shadow = Color(0x2E111827); // same ink, ~18% alpha
 
   @override
   Widget build(BuildContext context) {
@@ -25,94 +20,51 @@ class CodeBlock extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: _ink,
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [_sheen, _clear],
-          stops: [0.0, 0.6],
-        ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: _edge),
         boxShadow: const [
           BoxShadow(
-            color: _ambient,
-            blurRadius: 32,
-            spreadRadius: -8,
-            offset: Offset(0, 16),
-          ),
-          BoxShadow(
-            color: _contact,
-            blurRadius: 6,
-            spreadRadius: -2,
-            offset: Offset(0, 2),
+            color: _shadow,
+            blurRadius: 24,
+            spreadRadius: -6,
+            offset: Offset(0, 10),
           ),
         ],
       ),
-      child: Stack(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ExcludeSemantics(
-                child: Container(
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: const BoxDecoration(
-                    color: _bar,
-                    border: Border(bottom: BorderSide(color: _edge)),
-                  ),
-                  child: const Row(
-                    children: [
-                      _Dot(Color(0x33FFFFFF)), // ~20%
-                      SizedBox(width: 7),
-                      _Dot(Color(0x24FFFFFF)), // ~14%
-                      SizedBox(width: 7),
-                      _Dot(Color(0x17FFFFFF)), // ~9%
-                    ],
-                  ),
-                ),
+          ExcludeSemantics(
+            child: Container(
+              height: 36,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: const BoxDecoration(
+                color: _bar,
+                border: Border(bottom: BorderSide(color: _edge)),
               ),
-              DefaultSelectionStyle(
-                selectionColor: _select,
-                cursorColor: Colors.white,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
-                  child: SelectableText(
-                    code,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      height: 1.65,
-                      letterSpacing: 0.15,
-                      fontFamily: 'monospace',
-                      fontFamilyFallback: [
-                        'Menlo',
-                        'Roboto Mono',
-                        'Courier New',
-                      ],
-                    ),
-                  ),
-                ),
+              child: const Row(
+                children: [
+                  _Dot(),
+                  SizedBox(width: 6),
+                  _Dot(),
+                  SizedBox(width: 6),
+                  _Dot(),
+                ],
               ),
-            ],
+            ),
           ),
-          const Positioned(
-            top: 0,
-            left: 16,
-            right: 16,
-            height: 1,
-            child: ExcludeSemantics(
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [_clear, _rim, _clear],
-                    ),
-                  ),
-                ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(16),
+            child: SelectableText(
+              code,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                height: 1.6,
+                fontFamily: 'monospace',
+                fontFamilyFallback: ['Menlo', 'Roboto Mono', 'Courier New'],
               ),
             ),
           ),
@@ -123,15 +75,16 @@ class CodeBlock extends StatelessWidget {
 }
 
 class _Dot extends StatelessWidget {
-  final Color color;
-
-  const _Dot(this.color);
+  const _Dot();
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      child: const SizedBox.square(dimension: 8),
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        color: Color(0x40FFFFFF), // white, ~25% alpha
+        shape: BoxShape.circle,
+      ),
+      child: SizedBox.square(dimension: 8),
     );
   }
 }
