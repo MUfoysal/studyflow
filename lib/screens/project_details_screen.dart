@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:study_flow/models/project.dart';
+import 'package:study_flow/widgets/project_section.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
   final Project project;
 
-  const ProjectDetailsScreen({super.key, required this.project});
+  const ProjectDetailsScreen({
+    super.key,
+    required this.project,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,58 +24,68 @@ class ProjectDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           _buildHeader(),
-
           const SizedBox(height: 24),
 
-          _buildSection(
+          ProjectSection(
             title: 'Overview',
-            child: Text(project.description, style: _bodyStyle()),
+            child: Text(
+              project.description,
+              style: _bodyStyle(),
+            ),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Why Build This?',
-            child: Text(project.whyBuild, style: _bodyStyle()),
+            child: Text(
+              project.whyBuild,
+              style: _bodyStyle(),
+            ),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Features',
             child: _buildBulletList(project.features),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Technologies',
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children: project.technologies
-                  .map((technology) => _buildTechnologyChip(technology))
+                  .map(
+                    (technology) => _buildTechnologyChip(technology),
+                  )
                   .toList(),
             ),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Folder Structure',
             child: _buildCodeBlock(project.folderStructure),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Important Files',
             child: _buildBulletList(project.importantFiles),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Bad Practices ❌',
             child: _buildBulletList(project.badPractices),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'Good Practices ✅',
             child: _buildBulletList(project.goodPractices),
           ),
 
-          _buildSection(
+          ProjectSection(
             title: 'What You Learn',
-            child: Text(project.whatYouLearn, style: _bodyStyle()),
+            child: Text(
+              project.whatYouLearn,
+              style: _bodyStyle(),
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -87,15 +100,19 @@ class ProjectDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.code, size: 42, color: Color(0xFF16A34A)),
-
+          const Icon(
+            Icons.code,
+            size: 42,
+            color: Color(0xFF16A34A),
+          ),
           const SizedBox(height: 14),
-
           Text(
             project.title,
             style: const TextStyle(
@@ -104,9 +121,7 @@ class ProjectDetailsScreen extends StatelessWidget {
               color: Color(0xFF111827),
             ),
           ),
-
           const SizedBox(height: 8),
-
           Text(
             project.difficulty,
             style: const TextStyle(
@@ -119,36 +134,6 @@ class ProjectDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildSection({required String title, required Widget child}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 18),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF111827),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          child,
-        ],
-      ),
-    );
-  }
-
   Widget _buildBulletList(List<String> items) {
     return Column(
       children: items
@@ -160,12 +145,18 @@ class ProjectDetailsScreen extends StatelessWidget {
                 children: [
                   const Text(
                     '•',
-                    style: TextStyle(fontSize: 18, color: Color(0xFF16A34A)),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF16A34A),
+                    ),
                   ),
-
                   const SizedBox(width: 8),
-
-                  Expanded(child: Text(item, style: _bodyStyle())),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: _bodyStyle(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -176,7 +167,10 @@ class ProjectDetailsScreen extends StatelessWidget {
 
   Widget _buildTechnologyChip(String technology) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFFF0FDF4),
         borderRadius: BorderRadius.circular(20),
@@ -216,6 +210,10 @@ class ProjectDetailsScreen extends StatelessWidget {
   }
 
   TextStyle _bodyStyle() {
-    return const TextStyle(fontSize: 14, color: Color(0xFF4B5563), height: 1.6);
+    return const TextStyle(
+      fontSize: 14,
+      color: Color(0xFF4B5563),
+      height: 1.6,
+    );
   }
 }
