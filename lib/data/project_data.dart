@@ -2,6 +2,7 @@ import 'package:study_flow/models/project.dart';
 
 const List<Project> projects = [
   Project(
+    id: 'studyflow',
     title: 'StudyFlow',
     description:
         'A Flutter learning app designed to help learners follow a structured roadmap and track their learning progress.',
@@ -25,6 +26,7 @@ const List<Project> projects = [
         'Flutter UI development, navigation, state management basics, local persistence, project structure, and Firebase integration.',
     folderStructure: '''
 lib/
+
 ├── data/
 ├── models/
 ├── screens/
@@ -56,6 +58,7 @@ lib/
   ),
 
   Project(
+    id: 'flutter-todo',
     title: 'Flutter To-Do App',
     description:
         'A simple task management application where users can create, complete, and manage daily tasks.',
@@ -77,6 +80,7 @@ lib/
         'Stateful widgets, lists, forms, user interaction, and local storage.',
     folderStructure: '''
 lib/
+
 ├── models/
 │   └── task.dart
 ├── screens/
@@ -104,6 +108,7 @@ lib/
   ),
 
   Project(
+    id: 'notes-app',
     title: 'Notes App',
     description:
         'A simple note-taking application for creating, editing, and managing personal notes.',
@@ -125,6 +130,7 @@ lib/
         'Text controllers, forms, list management, CRUD concepts, and application structure.',
     folderStructure: '''
 lib/
+
 ├── models/
 │   └── note.dart
 ├── screens/

@@ -1,4 +1,5 @@
 class Project {
+  final String id;
   final String title;
   final String description;
   final String difficulty;
@@ -12,6 +13,7 @@ class Project {
   final List<String> goodPractices;
 
   const Project({
+    required this.id,
     required this.title,
     required this.description,
     required this.difficulty,
