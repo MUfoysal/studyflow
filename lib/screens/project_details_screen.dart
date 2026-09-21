@@ -4,6 +4,7 @@ import 'package:study_flow/widgets/bullet_list.dart';
 import 'package:study_flow/widgets/project_section.dart';
 import 'package:study_flow/widgets/technology_chip.dart';
 import 'package:study_flow/widgets/code_block.dart';
+import 'package:study_flow/screens/project_step_details_screen.dart';
 
 class ProjectDetailsScreen extends StatelessWidget {
   final Project project;
@@ -77,64 +78,85 @@ class ProjectDetailsScreen extends StatelessWidget {
               children: List.generate(project.steps.length, (index) {
                 final step = project.steps[index];
 
-                return Container(
-                  margin: EdgeInsets.only(
-                    bottom: index == project.steps.length - 1 ? 0 : 12,
-                  ),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAF9),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE5E7EB)),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFDCFCE7),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          '${index + 1}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF15803D),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              step.title,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF111827),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              step.description,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                height: 1.5,
-                                color: Color(0xFF6B7280),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return InkWell(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectStepDetailsScreen(
+          step: step,
+        ),
+      ),
+    );
+  },
+  borderRadius: BorderRadius.circular(14),
+  child: Container(
+    margin: EdgeInsets.only(
+      bottom: index == project.steps.length - 1 ? 0 : 12,
+    ),
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF8FAF9),
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: const Color(0xFFE5E7EB),
+      ),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: const Color(0xFFDCFCE7),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            '${index + 1}',
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF15803D),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                step.title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF111827),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                step.description,
+                style: const TextStyle(
+                  fontSize: 13,
+                  height: 1.5,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        const Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 14,
+          color: Color(0xFF9CA3AF),
+        ),
+      ],
+    ),
+  ),
+);
               }),
             ),
           ),
