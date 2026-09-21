@@ -1,4 +1,5 @@
 import 'package:study_flow/models/project.dart';
+import 'package:study_flow/models/project_step.dart';
 
 const List<Project> projects = [
   Project(
@@ -55,6 +56,50 @@ lib/
       'Use meaningful names',
       'Keep screens focused on UI and interaction',
     ],
+    steps: [
+      ProjectStep(
+        id: 'studyflow-setup',
+        title: 'Project Setup',
+        description:
+            'Create the Flutter project and configure the basic project environment.',
+      ),
+      ProjectStep(
+        id: 'studyflow-structure',
+        title: 'App Structure',
+        description:
+            'Organize screens, models, data, and reusable widgets into separate folders.',
+      ),
+      ProjectStep(
+        id: 'studyflow-ui',
+        title: 'UI Development',
+        description:
+            'Build the main StudyFlow screens and create a consistent user interface.',
+      ),
+      ProjectStep(
+        id: 'studyflow-learning',
+        title: 'Learning System',
+        description:
+            'Create courses, lessons, lesson details, and lesson completion functionality.',
+      ),
+      ProjectStep(
+        id: 'studyflow-progress',
+        title: 'Progress Tracking',
+        description:
+            'Track completed lessons, roadmap steps, and overall learning progress.',
+      ),
+      ProjectStep(
+        id: 'studyflow-firebase',
+        title: 'Firebase Integration',
+        description:
+            'Connect Firebase to prepare the application for authentication and cloud data.',
+      ),
+      ProjectStep(
+        id: 'studyflow-testing',
+        title: 'Testing & Polish',
+        description:
+            'Test the application, fix bugs, improve UI consistency, and prepare the project for release.',
+      ),
+    ],
   ),
 
   Project(
@@ -104,6 +149,44 @@ lib/
       'Create a Task model',
       'Create reusable task widgets',
       'Keep task logic organized',
+    ],
+    steps: [
+      ProjectStep(
+        id: 'todo-setup',
+        title: 'Project Setup',
+        description:
+            'Create the Flutter project and prepare the basic application structure.',
+      ),
+      ProjectStep(
+        id: 'todo-model',
+        title: 'Task Model',
+        description:
+            'Create a Task model to represent task information such as title and completion status.',
+      ),
+      ProjectStep(
+        id: 'todo-ui',
+        title: 'Task UI',
+        description:
+            'Build the task list and reusable task card interface.',
+      ),
+      ProjectStep(
+        id: 'todo-add-edit',
+        title: 'Add & Edit Task',
+        description:
+            'Allow users to create new tasks and update existing task information.',
+      ),
+      ProjectStep(
+        id: 'todo-complete-delete',
+        title: 'Complete & Delete Task',
+        description:
+            'Implement task completion and deletion functionality.',
+      ),
+      ProjectStep(
+        id: 'todo-storage',
+        title: 'Local Storage',
+        description:
+            'Save tasks locally so they remain available after restarting the application.',
+      ),
     ],
   ),
 
@@ -155,6 +238,44 @@ lib/
       'Use a Note model',
       'Separate screens by responsibility',
       'Create reusable widgets',
+    ],
+    steps: [
+      ProjectStep(
+        id: 'notes-setup',
+        title: 'Project Setup',
+        description:
+            'Create the Flutter project and prepare the basic application structure.',
+      ),
+      ProjectStep(
+        id: 'notes-model',
+        title: 'Note Model',
+        description:
+            'Create a Note model to represent note data such as title and content.',
+      ),
+      ProjectStep(
+        id: 'notes-list',
+        title: 'Notes List UI',
+        description:
+            'Build the notes list and reusable note card interface.',
+      ),
+      ProjectStep(
+        id: 'notes-create',
+        title: 'Create Note',
+        description:
+            'Create a form that allows users to write and save new notes.',
+      ),
+      ProjectStep(
+        id: 'notes-edit-delete',
+        title: 'Edit & Delete Note',
+        description:
+            'Allow users to update existing notes and remove notes they no longer need.',
+      ),
+      ProjectStep(
+        id: 'notes-storage',
+        title: 'Local Storage',
+        description:
+            'Save notes locally so the data remains available after restarting the application.',
+      ),
     ],
   ),
 ];

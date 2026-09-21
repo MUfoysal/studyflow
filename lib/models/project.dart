@@ -1,3 +1,5 @@
+import 'package:study_flow/models/project_step.dart';
+
 class Project {
   final String id;
   final String title;
@@ -11,6 +13,7 @@ class Project {
   final List<String> importantFiles;
   final List<String> badPractices;
   final List<String> goodPractices;
+  final List<ProjectStep> steps;
 
   const Project({
     required this.id,
@@ -25,5 +28,6 @@ class Project {
     required this.importantFiles,
     required this.badPractices,
     required this.goodPractices,
+    required this.steps,
   });
 }

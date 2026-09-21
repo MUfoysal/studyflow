@@ -3,7 +3,7 @@ class ProjectStep {
   final String title;
   final String description;
 
-  ProjectStep({
+  const ProjectStep({
     required this.id,
     required this.title,
     required this.description,
