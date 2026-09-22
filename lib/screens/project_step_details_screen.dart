@@ -1,10 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:study_flow/models/project_step.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProjectStepDetailsScreen extends StatelessWidget {
+class ProjectStepDetailsScreen extends StatefulWidget {
   final ProjectStep step;
 
   const ProjectStepDetailsScreen({super.key, required this.step});
+
+  @override
+  State<ProjectStepDetailsScreen> createState() =>
+      _ProjectStepDetailsScreenState();
+}
+
+class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
+  bool _isCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletionStatus();
+  }
+
+  Future<void> _loadCompletionStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final completedSteps = prefs.getStringList('completed_project_steps') ?? [];
+
+    if (completedSteps.contains(widget.step.id)) {
+      setState(() {
+        _isCompleted = true;
+      });
+    }
+  }
+
+  Future<void> _markStepAsComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final completedSteps = prefs.getStringList('completed_project_steps') ?? [];
+
+    if (!completedSteps.contains(widget.step.id)) {
+      completedSteps.add(widget.step.id);
+    }
+
+    await prefs.setStringList('completed_project_steps', completedSteps);
+
+    if (mounted) {
+      setState(() {
+        _isCompleted = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +83,9 @@ class ProjectStepDetailsScreen extends StatelessWidget {
           const SizedBox(height: 20),
 
           _buildExample(),
+          const SizedBox(height: 20),
+
+          _buildCompleteButton(),
         ],
       ),
     );
@@ -68,7 +116,7 @@ class ProjectStepDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            step.title,
+            widget.step.title,
             style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -85,7 +133,7 @@ class ProjectStepDetailsScreen extends StatelessWidget {
       title: 'About This Step',
       icon: Icons.info_outline_rounded,
       child: Text(
-        step.description,
+        widget.step.description,
         style: const TextStyle(
           fontSize: 14,
           height: 1.6,
@@ -100,7 +148,7 @@ class ProjectStepDetailsScreen extends StatelessWidget {
       title: 'Objective',
       icon: Icons.flag_outlined,
       child: Text(
-        step.objective,
+        widget.step.objective,
         style: const TextStyle(
           fontSize: 14,
           height: 1.6,
@@ -115,7 +163,7 @@ class ProjectStepDetailsScreen extends StatelessWidget {
       title: 'Tasks',
       icon: Icons.checklist_rounded,
       child: Column(
-        children: step.tasks.map((task) {
+        children: widget.step.tasks.map((task) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
@@ -150,7 +198,7 @@ class ProjectStepDetailsScreen extends StatelessWidget {
       title: 'Key Points',
       icon: Icons.lightbulb_outline_rounded,
       child: Column(
-        children: step.keyPoints.map((point) {
+        children: widget.step.keyPoints.map((point) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
@@ -188,12 +236,45 @@ class ProjectStepDetailsScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: SelectableText(
-          step.example,
+          widget.step.example,
           style: const TextStyle(
             fontSize: 13,
             height: 1.6,
             color: Colors.white,
             fontFamily: 'monospace',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompleteButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton.icon(
+        onPressed: _isCompleted
+            ? null
+            : () async {
+                await _markStepAsComplete();
+              },
+        icon: Icon(
+          _isCompleted ? Icons.check_circle_rounded : Icons.check_rounded,
+        ),
+        label: Text(
+          _isCompleted ? 'Completed' : 'Mark as Complete',
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _isCompleted
+              ? const Color(0xFF16A34A)
+              : Colors.black,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: const Color(0xFF16A34A),
+          disabledForegroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
       ),
