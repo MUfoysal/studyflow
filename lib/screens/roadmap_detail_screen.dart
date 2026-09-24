@@ -339,7 +339,7 @@ class _HeaderCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color:
-                Colors.green.withOpacity(0.12),
+                Colors.green.withValues(alpha: 0.12),
             blurRadius: 18,
             offset:
                 const Offset(0, 7),
@@ -361,7 +361,7 @@ class _HeaderCard extends StatelessWidget {
 
             decoration: BoxDecoration(
               color:
-                  Colors.white.withOpacity(0.75),
+                  Colors.white.withValues(alpha: 0.75),
 
               borderRadius:
                   BorderRadius.circular(10),
@@ -513,7 +513,7 @@ class _LessonPreviewCard
         boxShadow: [
           BoxShadow(
             color:
-                Colors.black.withOpacity(0.03),
+                Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset:
                 const Offset(0, 4),
