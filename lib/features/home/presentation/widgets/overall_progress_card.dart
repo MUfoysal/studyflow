@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:study_flow/core/theme/app_colors.dart';
+import 'package:study_flow/core/theme/app_radius.dart';
+import 'package:study_flow/core/theme/app_shadows.dart';
+
 class OverallProgressCard extends StatelessWidget {
   final double progress;
 
@@ -10,20 +14,14 @@ class OverallProgressCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFDCFCE7), Color(0xFFC7F3D8)],
+          colors: [AppColors.primaryLight, AppColors.primarySoft],
         ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.green.withValues(alpha: 0.14),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        borderRadius: AppRadius.large,
+        boxShadow: AppShadows.progress,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,12 +36,12 @@ class OverallProgressCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF16A34A),
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 15),
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: AppRadius.progress,
             child: TweenAnimationBuilder<double>(
               tween: Tween(begin: 0, end: progress),
               duration: const Duration(milliseconds: 900),
@@ -52,9 +50,9 @@ class OverallProgressCard extends StatelessWidget {
                 return LinearProgressIndicator(
                   value: value,
                   minHeight: 10,
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.cardBackground,
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF16A34A),
+                    AppColors.primary,
                   ),
                 );
               },

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:study_flow/core/theme/app_colors.dart';
+import 'package:study_flow/core/theme/app_radius.dart';
+
 class TodaysGoalCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -17,10 +20,10 @@ class TodaysGoalCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0FDF4),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFBBF7D0)),
+      decoration: const BoxDecoration(
+        color: AppColors.goalBackground,
+        borderRadius: AppRadius.card,
+        border: Border.fromBorderSide(BorderSide(color: AppColors.goalBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,12 +33,12 @@ class TodaysGoalCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFDCFCE7),
+                  color: AppColors.primaryLight,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.flag_circle_outlined,
-                  color: Color(0xFF16A34A),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -53,9 +56,9 @@ class TodaysGoalCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.grey.shade600,
+                        color: Colors.black54,
                       ),
                     ),
                   ],
@@ -65,7 +68,7 @@ class TodaysGoalCard extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: AppRadius.progress,
             child: TweenAnimationBuilder<double>(
               tween: Tween(begin: 0, end: progress),
               duration: const Duration(milliseconds: 900),
@@ -74,9 +77,9 @@ class TodaysGoalCard extends StatelessWidget {
                 return LinearProgressIndicator(
                   value: value,
                   minHeight: 9,
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.cardBackground,
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF16A34A),
+                    AppColors.primary,
                   ),
                 );
               },
@@ -90,7 +93,7 @@ class TodaysGoalCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF16A34A),
+                color: AppColors.primary,
               ),
             ),
           ),

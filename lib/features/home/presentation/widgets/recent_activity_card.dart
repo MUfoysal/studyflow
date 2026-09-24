@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:study_flow/core/theme/app_colors.dart';
+import 'package:study_flow/core/theme/app_radius.dart';
+import 'package:study_flow/core/theme/app_shadows.dart';
 import 'package:study_flow/features/home/presentation/models/activity_item.dart';
 
 class RecentActivityCard extends StatelessWidget {
@@ -12,16 +15,10 @@ class RecentActivityCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: AppRadius.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: [
@@ -31,10 +28,10 @@ class RecentActivityCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
-                    color: Color(0xFFDCFCE7),
+                    color: AppColors.primaryLight,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(items[i].icon, color: const Color(0xFF16A34A)),
+                  child: Icon(items[i].icon, color: AppColors.primary),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -51,9 +48,9 @@ class RecentActivityCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         items[i].time,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
-                          color: Colors.grey.shade600,
+                          color: Colors.black54,
                         ),
                       ),
                     ],

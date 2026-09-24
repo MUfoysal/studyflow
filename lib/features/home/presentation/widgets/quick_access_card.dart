@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:study_flow/core/theme/app_colors.dart';
+import 'package:study_flow/core/theme/app_radius.dart';
+import 'package:study_flow/core/theme/app_shadows.dart';
+
 class QuickAccessCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -15,25 +19,19 @@ class QuickAccessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: AppRadius.medium,
+        boxShadow: AppShadows.quickAccess,
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.medium,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.medium,
           onTap: onTap,
-          splashColor: Colors.green.withValues(alpha: 0.08),
-          highlightColor: Colors.green.withValues(alpha: 0.04),
+          splashColor: AppColors.primaryLight,
+          highlightColor: AppColors.primaryLight,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 18),
             child: Column(
@@ -41,10 +39,10 @@ class QuickAccessCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
-                    color: Color(0xFFDCFCE7),
+                    color: AppColors.primaryLight,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, size: 26, color: const Color(0xFF16A34A)),
+                  child: Icon(icon, size: 26, color: AppColors.primary),
                 ),
                 const SizedBox(height: 10),
                 Text(
