@@ -58,7 +58,7 @@ class TodaysGoalCard extends StatelessWidget {
                       subtitle,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ],

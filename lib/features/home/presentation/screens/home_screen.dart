@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:study_flow/core/theme/app_colors.dart';
 import 'package:study_flow/features/home/presentation/models/activity_item.dart';
 import 'package:study_flow/features/home/presentation/widgets/animated_entry.dart';
 import 'package:study_flow/features/home/presentation/widgets/continue_learning_card.dart';
@@ -16,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('StudyFlow'),
         backgroundColor: Colors.transparent,
@@ -33,12 +34,13 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -0.5,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             const Text(
               'Ready to continue learning Flutter?',
-              style: TextStyle(fontSize: 16, color: Colors.green),
+              style: TextStyle(fontSize: 16, color: AppColors.primary),
             ),
             const SizedBox(height: 25),
 
@@ -51,7 +53,11 @@ class HomeScreen extends StatelessWidget {
 
             const Text(
               'Continue Learning',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 15),
 
@@ -72,7 +78,11 @@ class HomeScreen extends StatelessWidget {
 
             const Text(
               "Today's Goal",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 15),
 
@@ -89,7 +99,11 @@ class HomeScreen extends StatelessWidget {
 
             const Text(
               'Recent Activity',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 15),
 
@@ -120,7 +134,11 @@ class HomeScreen extends StatelessWidget {
 
             const Text(
               'Quick Access',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 15),
 

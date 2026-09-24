@@ -50,7 +50,7 @@ class RecentActivityCard extends StatelessWidget {
                         items[i].time,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: Colors.black54,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],

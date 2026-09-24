@@ -28,7 +28,9 @@ class ContinueLearningCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: AppRadius.card,
-        border: Border.all(color: Colors.grey.shade200),
+        border: const Border.fromBorderSide(
+          BorderSide(color: AppColors.border),
+        ),
         boxShadow: AppShadows.card,
       ),
       child: Column(
