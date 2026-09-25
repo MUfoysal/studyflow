@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:study_flow/core/theme/app_colors.dart';
+import 'package:study_flow/features/home/data/datasources/home_local_data_source.dart';
+import 'package:study_flow/features/home/data/repositories/home_repository_impl.dart';
+import 'package:study_flow/features/home/domain/entities/home_activity.dart';
+import 'package:study_flow/features/home/domain/entities/home_dashboard.dart';
+import 'package:study_flow/features/home/domain/usecases/get_home_dashboard.dart';
 import 'package:study_flow/features/home/presentation/models/activity_item.dart';
 import 'package:study_flow/features/home/presentation/widgets/animated_entry.dart';
 import 'package:study_flow/features/home/presentation/widgets/continue_learning_card.dart';
@@ -16,6 +21,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GetHomeDashboard getHomeDashboard = GetHomeDashboard(
+      HomeRepositoryImpl(const HomeLocalDataSource()),
+    );
+
+    final HomeDashboard dashboard = getHomeDashboard();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -46,7 +57,7 @@ class HomeScreen extends StatelessWidget {
 
             AnimatedEntry(
               delayMs: 0,
-              child: const OverallProgressCard(progress: 0.35),
+              child: OverallProgressCard(progress: dashboard.overallProgress),
             ),
 
             const SizedBox(height: 30),
@@ -64,10 +75,10 @@ class HomeScreen extends StatelessWidget {
             AnimatedEntry(
               delayMs: 80,
               child: ContinueLearningCard(
-                title: 'Flutter Basics',
-                subtitle: 'Learn the fundamentals of Flutter development.',
-                lessonLabel: 'Lesson 4 of 12',
-                progress: 0.33,
+                title: dashboard.learningTitle,
+                subtitle: dashboard.learningSubtitle,
+                lessonLabel: dashboard.lessonLabel,
+                progress: dashboard.learningProgress,
                 onPressed: () {
                   // Later: navigate to Learn screen.
                 },
@@ -88,10 +99,12 @@ class HomeScreen extends StatelessWidget {
 
             AnimatedEntry(
               delayMs: 160,
-              child: const TodaysGoalCard(
-                title: 'Complete 4 Lessons',
-                subtitle: '2 of 4 completed',
-                progress: 0.50,
+              child: TodaysGoalCard(
+                title: 'Complete ${dashboard.dailyGoal.targetLessons} Lessons',
+                subtitle:
+                    '${dashboard.dailyGoal.completedLessons} of '
+                    '${dashboard.dailyGoal.targetLessons} completed',
+                progress: dashboard.dailyGoal.progress,
               ),
             ),
 
@@ -109,24 +122,10 @@ class HomeScreen extends StatelessWidget {
 
             AnimatedEntry(
               delayMs: 240,
-              child: const RecentActivityCard(
-                items: [
-                  ActivityItem(
-                    icon: Icons.check,
-                    title: 'Completed Stateless Widget',
-                    time: 'Today · 10:30 AM',
-                  ),
-                  ActivityItem(
-                    icon: Icons.menu_book_outlined,
-                    title: 'Started Stateful Widget',
-                    time: 'Today · 11:50 AM',
-                  ),
-                  ActivityItem(
-                    icon: Icons.emoji_events_outlined,
-                    title: 'Completed Flutter Basics',
-                    time: 'Yesterday · 9:50 AM',
-                  ),
-                ],
+              child: RecentActivityCard(
+                items: dashboard.recentActivities
+                    .map(_mapActivityToItem)
+                    .toList(),
               ),
             ),
 
@@ -195,5 +194,30 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  ActivityItem _mapActivityToItem(HomeActivity activity) {
+    switch (activity.type) {
+      case HomeActivityType.completed:
+        return ActivityItem(
+          icon: Icons.check,
+          title: activity.title,
+          time: activity.time,
+        );
+
+      case HomeActivityType.started:
+        return ActivityItem(
+          icon: Icons.menu_book_outlined,
+          title: activity.title,
+          time: activity.time,
+        );
+
+      case HomeActivityType.achievement:
+        return ActivityItem(
+          icon: Icons.emoji_events_outlined,
+          title: activity.title,
+          time: activity.time,
+        );
+    }
   }
 }
