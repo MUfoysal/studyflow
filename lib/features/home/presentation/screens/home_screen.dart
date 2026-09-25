@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:study_flow/core/theme/app_colors.dart';
-import 'package:study_flow/features/home/data/datasources/home_local_data_source.dart';
-import 'package:study_flow/features/home/data/repositories/home_repository_impl.dart';
+import 'package:study_flow/features/home/di/home_dependencies.dart';
 import 'package:study_flow/features/home/domain/entities/home_dashboard.dart';
-import 'package:study_flow/features/home/domain/usecases/get_home_dashboard.dart';
 import 'package:study_flow/features/home/presentation/widgets/animated_entry.dart';
 import 'package:study_flow/features/home/presentation/widgets/continue_learning_card.dart';
 import 'package:study_flow/features/home/presentation/widgets/overall_progress_card.dart';
@@ -22,13 +20,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GetHomeDashboard getHomeDashboard = GetHomeDashboard(
-      HomeRepositoryImpl(
-        const HomeLocalDataSource(),
-      ),
-    );
-
-    final HomeDashboard dashboard = getHomeDashboard();
+    final HomeDashboard dashboard =
+        HomeDependencies.getHomeDashboard()();
 
     return Scaffold(
       backgroundColor: AppColors.background,
