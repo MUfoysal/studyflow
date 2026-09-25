@@ -1,14 +1,17 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:study_flow/models/lesson.dart';
+import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
+
 import 'package:study_flow/screens/lesson_details_screen.dart';
 
 class LessonScreen extends StatefulWidget {
   final String title;
+
   final int lessonCount;
-  final List<Lesson> lessons;
+
+  final List<LearnLesson> lessons;
 
   const LessonScreen({
     super.key,
@@ -83,7 +86,6 @@ class _LessonScreenState extends State<LessonScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAF9),
-
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Colors.transparent,
@@ -93,7 +95,6 @@ class _LessonScreenState extends State<LessonScreen> {
           onPressed: _goBack,
         ),
       ),
-
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(
           16,
@@ -104,7 +105,6 @@ class _LessonScreenState extends State<LessonScreen> {
         itemCount: widget.lessons.length,
         itemBuilder: (context, index) {
           final lesson = widget.lessons[index];
-
           final isLast = index == widget.lessons.length - 1;
 
           return _AnimatedEntry(
@@ -140,6 +140,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
 class _AnimatedEntry extends StatefulWidget {
   final Widget child;
+
   final int delayMs;
 
   const _AnimatedEntry({
@@ -154,7 +155,9 @@ class _AnimatedEntry extends StatefulWidget {
 class _AnimatedEntryState extends State<_AnimatedEntry>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+
   late final Animation<double> _fade;
+
   late final Animation<Offset> _slide;
 
   @override
@@ -211,9 +214,13 @@ class _AnimatedEntryState extends State<_AnimatedEntry>
 
 class _LessonTile extends StatelessWidget {
   final int number;
+
   final String title;
+
   final bool isCompleted;
+
   final bool showConnector;
+
   final VoidCallback onTap;
 
   const _LessonTile({
@@ -242,7 +249,6 @@ class _LessonTile extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
-
               if (showConnector)
                 Expanded(
                   child: Container(
@@ -257,9 +263,7 @@ class _LessonTile extends StatelessWidget {
                 ),
             ],
           ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
@@ -277,26 +281,21 @@ class _LessonTile extends StatelessWidget {
                   ),
                 ],
               ),
-
               child: Material(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
-
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
                   onTap: onTap,
                   splashColor: Colors.green.withValues(alpha: 0.08),
-
                   child: Padding(
                     padding: const EdgeInsets.all(14),
-
                     child: Row(
                       children: [
                         CircleAvatar(
                           backgroundColor: isCompleted
                               ? Colors.green
                               : const Color(0xFFDCFCE7),
-
                           child: isCompleted
                               ? const Icon(
                                   Icons.check,
@@ -310,9 +309,7 @@ class _LessonTile extends StatelessWidget {
                                   ),
                                 ),
                         ),
-
                         const SizedBox(width: 14),
-
                         Expanded(
                           child: Text(
                             title,
@@ -322,7 +319,6 @@ class _LessonTile extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         Icon(
                           isCompleted
                               ? Icons.check_circle

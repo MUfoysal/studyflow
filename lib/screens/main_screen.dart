@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:study_flow/features/home/presentation/screens/home_screen.dart';
-import 'package:study_flow/screens/learn_screen.dart';
+import 'package:study_flow/features/learn/presentation/screens/learn_screen.dart';
 import 'package:study_flow/screens/project_screen.dart';
 import 'package:study_flow/screens/roadmap_screen.dart';
 
