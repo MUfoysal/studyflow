@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:study_flow/core/theme/app_colors.dart';
 import 'package:study_flow/core/theme/app_radius.dart';
 import 'package:study_flow/core/theme/app_shadows.dart';
-import 'package:study_flow/features/home/presentation/models/activity_item.dart';
+import 'package:study_flow/features/home/domain/entities/home_activity.dart';
 
 class RecentActivityCard extends StatelessWidget {
-  final List<ActivityItem> items;
+  final List<HomeActivity> items;
 
-  const RecentActivityCard({super.key, required this.items});
+  const RecentActivityCard({
+    super.key,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,10 @@ class RecentActivityCard extends StatelessWidget {
                     color: AppColors.primaryLight,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(items[i].icon, color: AppColors.primary),
+                  child: Icon(
+                    _getActivityIcon(items[i].type),
+                    color: AppColors.primary,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -63,5 +69,18 @@ class RecentActivityCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _getActivityIcon(HomeActivityType type) {
+    switch (type) {
+      case HomeActivityType.completed:
+        return Icons.check;
+
+      case HomeActivityType.started:
+        return Icons.menu_book_outlined;
+
+      case HomeActivityType.achievement:
+        return Icons.emoji_events_outlined;
+    }
   }
 }

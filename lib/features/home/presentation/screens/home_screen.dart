@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:study_flow/core/theme/app_colors.dart';
 import 'package:study_flow/features/home/data/datasources/home_local_data_source.dart';
 import 'package:study_flow/features/home/data/repositories/home_repository_impl.dart';
-import 'package:study_flow/features/home/domain/entities/home_activity.dart';
 import 'package:study_flow/features/home/domain/entities/home_dashboard.dart';
 import 'package:study_flow/features/home/domain/usecases/get_home_dashboard.dart';
-import 'package:study_flow/features/home/presentation/models/activity_item.dart';
 import 'package:study_flow/features/home/presentation/widgets/animated_entry.dart';
 import 'package:study_flow/features/home/presentation/widgets/continue_learning_card.dart';
 import 'package:study_flow/features/home/presentation/widgets/overall_progress_card.dart';
@@ -17,12 +15,17 @@ import 'package:study_flow/features/home/presentation/widgets/todays_goal_card.d
 class HomeScreen extends StatelessWidget {
   final ValueChanged<int> onNavigate;
 
-  const HomeScreen({super.key, required this.onNavigate});
+  const HomeScreen({
+    super.key,
+    required this.onNavigate,
+  });
 
   @override
   Widget build(BuildContext context) {
     final GetHomeDashboard getHomeDashboard = GetHomeDashboard(
-      HomeRepositoryImpl(const HomeLocalDataSource()),
+      HomeRepositoryImpl(
+        const HomeLocalDataSource(),
+      ),
     );
 
     final HomeDashboard dashboard = getHomeDashboard();
@@ -51,13 +54,18 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 8),
             const Text(
               'Ready to continue learning Flutter?',
-              style: TextStyle(fontSize: 16, color: AppColors.primary),
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.primary,
+              ),
             ),
             const SizedBox(height: 25),
 
             AnimatedEntry(
               delayMs: 0,
-              child: OverallProgressCard(progress: dashboard.overallProgress),
+              child: OverallProgressCard(
+                progress: dashboard.overallProgress,
+              ),
             ),
 
             const SizedBox(height: 30),
@@ -123,9 +131,7 @@ class HomeScreen extends StatelessWidget {
             AnimatedEntry(
               delayMs: 240,
               child: RecentActivityCard(
-                items: dashboard.recentActivities
-                    .map(_mapActivityToItem)
-                    .toList(),
+                items: dashboard.recentActivities,
               ),
             ),
 
@@ -194,30 +200,5 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  ActivityItem _mapActivityToItem(HomeActivity activity) {
-    switch (activity.type) {
-      case HomeActivityType.completed:
-        return ActivityItem(
-          icon: Icons.check,
-          title: activity.title,
-          time: activity.time,
-        );
-
-      case HomeActivityType.started:
-        return ActivityItem(
-          icon: Icons.menu_book_outlined,
-          title: activity.title,
-          time: activity.time,
-        );
-
-      case HomeActivityType.achievement:
-        return ActivityItem(
-          icon: Icons.emoji_events_outlined,
-          title: activity.title,
-          time: activity.time,
-        );
-    }
   }
 }
