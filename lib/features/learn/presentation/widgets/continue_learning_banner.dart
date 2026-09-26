@@ -12,21 +12,29 @@ class ContinueLearningBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const primaryGreen = Color(0xFF16A34A);
+    const lightGreen = Color(0xFFDCFCE7);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: lightGreen,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFBBF7D0),
+          ),
         ),
         child: Row(
           children: [
             const ContinueLearningIcon(
               icon: Icons.play_arrow_rounded,
             ),
+
             const SizedBox(width: 14),
+
             const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,25 +42,28 @@ class ContinueLearningBanner extends StatelessWidget {
                   Text(
                     'Continue Learning',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+
                   SizedBox(height: 4),
+
                   Text(
                     'Continue where you left off',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: Color(0xFF757575),
                       fontSize: 13,
                     ),
                   ),
                 ],
               ),
             ),
+
             const Icon(
               Icons.arrow_forward_ios_rounded,
-              color: Colors.white,
+              color: primaryGreen,
               size: 16,
             ),
           ],

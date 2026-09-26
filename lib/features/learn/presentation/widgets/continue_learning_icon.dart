@@ -14,12 +14,12 @@ class ContinueLearningIcon extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: const Color(0xFFC7F3D8),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Icon(
         icon,
-        color: Colors.white,
+        color: const Color(0xFF16A34A),
         size: 24,
       ),
     );
