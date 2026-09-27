@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_flow/models/project_step.dart';
+import 'package:study_flow/features/project/domain/entities/project_step.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProjectStepDetailsScreen extends StatefulWidget {

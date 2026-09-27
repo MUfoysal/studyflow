@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:study_flow/models/project.dart';
-import 'package:study_flow/models/project_progress.dart';
+import 'package:study_flow/features/project/domain/entities/project.dart';
+import 'package:study_flow/features/project/domain/entities/project_progress.dart';
 import 'package:study_flow/widgets/bullet_list.dart';
 import 'package:study_flow/widgets/project_section.dart';
 import 'package:study_flow/widgets/technology_chip.dart';

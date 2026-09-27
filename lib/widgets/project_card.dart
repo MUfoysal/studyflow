@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_flow/models/project.dart';
+import 'package:study_flow/features/project/domain/entities/project.dart';
 import 'package:study_flow/screens/project_details_screen.dart';
 
 class ProjectCard extends StatelessWidget {

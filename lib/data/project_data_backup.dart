@@ -1,5 +1,6 @@
-import 'package:study_flow/features/project/domain/entities/project.dart';
-import 'package:study_flow/features/project/domain/entities/project_step.dart';
+import 'package:study_flow/models/project.dart';
+import 'package:study_flow/models/project_step.dart';
+
 const List<Project> projects = [
   Project(
     id: 'studyflow',
