@@ -4,6 +4,7 @@ import 'package:study_flow/features/home/presentation/screens/home_screen.dart';
 import 'package:study_flow/features/learn/presentation/screens/learn_screen.dart';
 import 'package:study_flow/screens/project_screen.dart';
 import 'package:study_flow/screens/roadmap_screen.dart';
+import 'package:study_flow/features/project/di/project_dependencies.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -22,12 +23,16 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
 
     screen = [
-      HomeScreen(
-        onNavigate: _changeTab,
-      ),
+      HomeScreen(onNavigate: _changeTab),
       const LearnScreen(),
       const RoadmapScreen(),
-      const ProjectScreen(),
+      ProjectScreen(
+        getProjects: ProjectDependencies.createGetProjects(
+          ProjectDependencies.createRepository(
+            ProjectDependencies.createLocalDataSource(),
+          ),
+        ),
+      ),
     ];
   }
 
@@ -43,30 +48,15 @@ class _MainScreenState extends State<MainScreen> {
       body: screen[selectedIndex],
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: GNav(
           selectedIndex: selectedIndex,
           onTabChange: _changeTab,
           tabs: const [
-            GButton(
-              icon: Icons.home,
-              text: 'Home',
-            ),
-            GButton(
-              icon: Icons.menu_book,
-              text: 'Learn',
-            ),
-            GButton(
-              icon: Icons.route,
-              text: 'Roadmap',
-            ),
-            GButton(
-              icon: Icons.code,
-              text: 'Projects',
-            ),
+            GButton(icon: Icons.home, text: 'Home'),
+            GButton(icon: Icons.menu_book, text: 'Learn'),
+            GButton(icon: Icons.route, text: 'Roadmap'),
+            GButton(icon: Icons.code, text: 'Projects'),
           ],
         ),
       ),
