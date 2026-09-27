@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 import 'package:study_flow/features/project/domain/entities/project.dart';
+import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
 import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
+import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
 import 'package:study_flow/screens/project_details_screen.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
   final GetProjectProgress getProjectProgress;
+  final IsProjectStepCompleted isProjectStepCompleted;
+  final CompleteProjectStep completeProjectStep;
 
   const ProjectCard({
     super.key,
     required this.project,
     required this.getProjectProgress,
+    required this.isProjectStepCompleted,
+    required this.completeProjectStep,
   });
 
   @override
@@ -122,6 +128,8 @@ class ProjectCard extends StatelessWidget {
                     builder: (context) => ProjectDetailsScreen(
                       project: project,
                       getProjectProgress: getProjectProgress,
+                      isProjectStepCompleted: isProjectStepCompleted,
+                      completeProjectStep: completeProjectStep,
                     ),
                   ),
                 );

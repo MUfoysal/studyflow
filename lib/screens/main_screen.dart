@@ -32,6 +32,12 @@ class _MainScreenState extends State<MainScreen> {
     final getProjectProgress = ProjectDependencies.createGetProjectProgress(
       repository,
     );
+    final isProjectStepCompleted =
+        ProjectDependencies.createIsProjectStepCompleted(repository);
+
+    final completeProjectStep = ProjectDependencies.createCompleteProjectStep(
+      repository,
+    );
 
     screen = [
       HomeScreen(onNavigate: _changeTab),
@@ -40,6 +46,8 @@ class _MainScreenState extends State<MainScreen> {
       ProjectScreen(
         getProjects: getProjects,
         getProjectProgress: getProjectProgress,
+        isProjectStepCompleted: isProjectStepCompleted,
+        completeProjectStep: completeProjectStep,
       ),
     ];
   }

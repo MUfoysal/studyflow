@@ -3,15 +3,21 @@ import 'package:study_flow/features/project/domain/entities/project.dart';
 import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/features/project/domain/usecases/get_projects.dart';
 import 'package:study_flow/widgets/project_card.dart';
+import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
+import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
 
 class ProjectScreen extends StatefulWidget {
   final GetProjects getProjects;
   final GetProjectProgress getProjectProgress;
+  final IsProjectStepCompleted isProjectStepCompleted;
+  final CompleteProjectStep completeProjectStep;
 
   const ProjectScreen({
     super.key,
     required this.getProjects,
     required this.getProjectProgress,
+    required this.isProjectStepCompleted,
+    required this.completeProjectStep,
   });
 
   @override
@@ -46,15 +52,11 @@ class _ProjectScreenState extends State<ProjectScreen> {
         future: _projects,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(
-              child: Text('Something went wrong.'),
-            );
+            return const Center(child: Text('Something went wrong.'));
           }
 
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           final projects = snapshot.data!;
@@ -84,6 +86,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                 (project) => ProjectCard(
                   project: project,
                   getProjectProgress: widget.getProjectProgress,
+                  isProjectStepCompleted: widget.isProjectStepCompleted,
+                  completeProjectStep: widget.completeProjectStep,
                 ),
               ),
             ],
