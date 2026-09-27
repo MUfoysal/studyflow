@@ -1,21 +1,28 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
 import 'package:study_flow/features/project/domain/entities/project.dart';
 import 'package:study_flow/features/project/domain/entities/project_progress.dart';
+import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
+import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
+import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
+import 'package:study_flow/screens/project_step_details_screen.dart';
 import 'package:study_flow/widgets/bullet_list.dart';
+import 'package:study_flow/widgets/code_block.dart';
 import 'package:study_flow/widgets/project_section.dart';
 import 'package:study_flow/widgets/technology_chip.dart';
-import 'package:study_flow/widgets/code_block.dart';
-import 'package:study_flow/screens/project_step_details_screen.dart';
-import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
   final GetProjectProgress getProjectProgress;
+  final IsProjectStepCompleted isProjectStepCompleted;
+  final CompleteProjectStep completeProjectStep;
 
   const ProjectDetailsScreen({
     super.key,
     required this.project,
     required this.getProjectProgress,
+    required this.isProjectStepCompleted,
+    required this.completeProjectStep,
   });
 
   @override
@@ -101,23 +108,30 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         children: [
           _buildHeader(),
           const SizedBox(height: 24),
-
           _buildProgressSection(progress),
           const SizedBox(height: 20),
 
           ProjectSection(
             title: 'Overview',
-            child: Text(widget.project.description, style: _bodyStyle()),
+            child: Text(
+              widget.project.description,
+              style: _bodyStyle(),
+            ),
           ),
 
           ProjectSection(
             title: 'Why Build This?',
-            child: Text(widget.project.whyBuild, style: _bodyStyle()),
+            child: Text(
+              widget.project.whyBuild,
+              style: _bodyStyle(),
+            ),
           ),
 
           ProjectSection(
             title: 'Features',
-            child: BulletList(items: widget.project.features),
+            child: BulletList(
+              items: widget.project.features,
+            ),
           ),
 
           ProjectSection(
@@ -126,128 +140,151 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               spacing: 8,
               runSpacing: 8,
               children: widget.project.technologies
-                  .map((technology) => TechnologyChip(technology: technology))
+                  .map(
+                    (technology) => TechnologyChip(
+                      technology: technology,
+                    ),
+                  )
                   .toList(),
             ),
           ),
 
           ProjectSection(
             title: 'Folder Structure',
-            child: CodeBlock(code: widget.project.folderStructure),
+            child: CodeBlock(
+              code: widget.project.folderStructure,
+            ),
           ),
 
           ProjectSection(
             title: 'Important Files',
-            child: BulletList(items: widget.project.importantFiles),
+            child: BulletList(
+              items: widget.project.importantFiles,
+            ),
           ),
 
           ProjectSection(
-            title: 'Bad Practices ❌',
-            child: BulletList(items: widget.project.badPractices),
+            title: 'Bad Practices Γ¥î',
+            child: BulletList(
+              items: widget.project.badPractices,
+            ),
           ),
 
           ProjectSection(
-            title: 'Good Practices ✅',
-            child: BulletList(items: widget.project.goodPractices),
+            title: 'Good Practices Γ£à',
+            child: BulletList(
+              items: widget.project.goodPractices,
+            ),
           ),
 
           ProjectSection(
             title: 'Project Steps',
             child: Column(
-              children: List.generate(widget.project.steps.length, (index) {
-                final step = widget.project.steps[index];
+              children: List.generate(
+                widget.project.steps.length,
+                (index) {
+                  final step = widget.project.steps[index];
 
-                return InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ProjectStepDetailsScreen(step: step),
-                      ),
-                    );
-
-                    await _loadProjectProgress();
-                  },
-                  borderRadius: BorderRadius.circular(14),
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      bottom: index == widget.project.steps.length - 1 ? 0 : 12,
-                    ),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAF9),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFE5E7EB)),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 34,
-                          height: 34,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFDCFCE7),
-                            borderRadius: BorderRadius.circular(10),
+                  return InkWell(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProjectStepDetailsScreen(
+                            step: step,
+                            isProjectStepCompleted:
+                                widget.isProjectStepCompleted,
+                            completeProjectStep:
+                                widget.completeProjectStep,
                           ),
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF15803D),
+                        ),
+                      );
+
+                      await _loadProjectProgress();
+                    },
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        bottom:
+                            index == widget.project.steps.length - 1
+                                ? 0
+                                : 12,
+                      ),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAF9),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: const Color(0xFFE5E7EB),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 34,
+                            height: 34,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFDCFCE7),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '${index + 1}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF15803D),
+                              ),
                             ),
                           ),
-                        ),
-
-                        const SizedBox(width: 12),
-
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                step.title,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF111827),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  step.title,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF111827),
+                                  ),
                                 ),
-                              ),
-
-                              const SizedBox(height: 5),
-
-                              Text(
-                                step.description,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  height: 1.5,
-                                  color: Color(0xFF6B7280),
+                                const SizedBox(height: 5),
+                                Text(
+                                  step.description,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    height: 1.5,
+                                    color: Color(0xFF6B7280),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(width: 8),
-
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 14,
-                          color: Color(0xFF9CA3AF),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 14,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
             ),
           ),
 
           ProjectSection(
             title: 'What You Learn',
-            child: Text(widget.project.whatYouLearn, style: _bodyStyle()),
+            child: Text(
+              widget.project.whatYouLearn,
+              style: _bodyStyle(),
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -262,15 +299,19 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.code, size: 42, color: Color(0xFF16A34A)),
-
+          const Icon(
+            Icons.code,
+            size: 42,
+            color: Color(0xFF16A34A),
+          ),
           const SizedBox(height: 14),
-
           Text(
             widget.project.title,
             style: const TextStyle(
@@ -279,9 +320,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               color: Color(0xFF111827),
             ),
           ),
-
           const SizedBox(height: 8),
-
           Text(
             widget.project.difficulty,
             style: const TextStyle(
@@ -303,7 +342,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,7 +360,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   color: Color(0xFF111827),
                 ),
               ),
-
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -340,17 +380,17 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 20),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '${progress.completedSteps}/${progress.totalSteps} steps completed',
-                style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF6B7280),
+                ),
               ),
-
               Text(
                 '${(progress.progress * 100).round()}%',
                 style: const TextStyle(
@@ -361,9 +401,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 10),
-
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
@@ -381,6 +419,10 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   }
 
   TextStyle _bodyStyle() {
-    return const TextStyle(fontSize: 14, color: Color(0xFF4B5563), height: 1.6);
+    return const TextStyle(
+      fontSize: 14,
+      color: Color(0xFF4B5563),
+      height: 1.6,
+    );
   }
 }

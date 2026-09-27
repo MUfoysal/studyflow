@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_flow/features/project/domain/entities/project_step.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
+import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
 
 class ProjectStepDetailsScreen extends StatefulWidget {
   final ProjectStep step;
+  final IsProjectStepCompleted isProjectStepCompleted;
+  final CompleteProjectStep completeProjectStep;
 
-  const ProjectStepDetailsScreen({super.key, required this.step});
+  const ProjectStepDetailsScreen({
+    super.key,
+    required this.step,
+    required this.isProjectStepCompleted,
+    required this.completeProjectStep,
+  });
 
   @override
   State<ProjectStepDetailsScreen> createState() =>
       _ProjectStepDetailsScreenState();
 }
 
-class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
+class _ProjectStepDetailsScreenState
+    extends State<ProjectStepDetailsScreen> {
   bool _isCompleted = false;
 
   @override
@@ -22,27 +32,18 @@ class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
   }
 
   Future<void> _loadCompletionStatus() async {
-    final prefs = await SharedPreferences.getInstance();
+    final isCompleted =
+        await widget.isProjectStepCompleted(widget.step.id);
 
-    final completedSteps = prefs.getStringList('completed_project_steps') ?? [];
-
-    if (completedSteps.contains(widget.step.id)) {
+    if (mounted) {
       setState(() {
-        _isCompleted = true;
+        _isCompleted = isCompleted;
       });
     }
   }
 
   Future<void> _markStepAsComplete() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final completedSteps = prefs.getStringList('completed_project_steps') ?? [];
-
-    if (!completedSteps.contains(widget.step.id)) {
-      completedSteps.add(widget.step.id);
-    }
-
-    await prefs.setStringList('completed_project_steps', completedSteps);
+    await widget.completeProjectStep(widget.step.id);
 
     if (mounted) {
       setState(() {
@@ -69,22 +70,16 @@ class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
         children: [
           _buildHeader(),
           const SizedBox(height: 20),
-
           _buildDescription(),
           const SizedBox(height: 20),
-
           _buildObjective(),
           const SizedBox(height: 20),
-
           _buildTasks(),
           const SizedBox(height: 20),
-
           _buildKeyPoints(),
           const SizedBox(height: 20),
-
           _buildExample(),
           const SizedBox(height: 20),
-
           _buildCompleteButton(),
         ],
       ),
@@ -204,7 +199,11 @@ class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.circle, size: 7, color: Color(0xFF16A34A)),
+                const Icon(
+                  Icons.circle,
+                  size: 7,
+                  color: Color(0xFF16A34A),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -259,11 +258,16 @@ class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
                 await _markStepAsComplete();
               },
         icon: Icon(
-          _isCompleted ? Icons.check_circle_rounded : Icons.check_rounded,
+          _isCompleted
+              ? Icons.check_circle_rounded
+              : Icons.check_rounded,
         ),
         label: Text(
           _isCompleted ? 'Completed' : 'Mark as Complete',
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: _isCompleted
@@ -298,9 +302,17 @@ class _ProjectStepDetailsScreenState extends State<ProjectStepDetailsScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.circle, size: 7, color: Color(0xFF16A34A)),
+              const Icon(
+                Icons.circle,
+                size: 7,
+                color: Color(0xFF16A34A),
+              ),
               const SizedBox(width: 8),
-              Icon(icon, size: 20, color: const Color(0xFF16A34A)),
+              Icon(
+                icon,
+                size: 20,
+                color: const Color(0xFF16A34A),
+              ),
               const SizedBox(width: 8),
               Text(
                 title,
