@@ -1,8 +1,8 @@
-
 import 'package:study_flow/features/project/data/datasources/project_local_data_source.dart';
 import 'package:study_flow/features/project/data/repositories/project_repository_impl.dart';
 import 'package:study_flow/features/project/domain/repositories/project_repository.dart';
 import 'package:study_flow/features/project/domain/usecases/get_project_by_id.dart';
+import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/features/project/domain/usecases/get_projects.dart';
 
 class ProjectDependencies {
@@ -30,6 +30,14 @@ class ProjectDependencies {
     ProjectRepository repository,
   ) {
     return GetProjectById(
+      repository: repository,
+    );
+  }
+
+  static GetProjectProgress createGetProjectProgress(
+    ProjectRepository repository,
+  ) {
+    return GetProjectProgress(
       repository: repository,
     );
   }

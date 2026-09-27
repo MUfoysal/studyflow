@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:study_flow/features/project/domain/entities/project.dart';
+import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/screens/project_details_screen.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
+  final GetProjectProgress getProjectProgress;
 
   const ProjectCard({
     super.key,
     required this.project,
+    required this.getProjectProgress,
   });
 
   @override
@@ -51,9 +55,7 @@ class ProjectCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 14),
-
           Text(
             project.description,
             style: const TextStyle(
@@ -62,9 +64,7 @@ class ProjectCard extends StatelessWidget {
               color: Color(0xFF6B7280),
             ),
           ),
-
           const SizedBox(height: 14),
-
           Row(
             children: [
               const Icon(
@@ -83,9 +83,7 @@ class ProjectCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 14),
-
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -113,9 +111,7 @@ class ProjectCard extends StatelessWidget {
                 )
                 .toList(),
           ),
-
           const SizedBox(height: 18),
-
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -125,6 +121,7 @@ class ProjectCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProjectDetailsScreen(
                       project: project,
+                      getProjectProgress: getProjectProgress,
                     ),
                   ),
                 );

@@ -19,19 +19,27 @@ class _MainScreenState extends State<MainScreen> {
   late final List<Widget> screen;
 
   @override
+  @override
   void initState() {
     super.initState();
+
+    final localDataSource = ProjectDependencies.createLocalDataSource();
+
+    final repository = ProjectDependencies.createRepository(localDataSource);
+
+    final getProjects = ProjectDependencies.createGetProjects(repository);
+
+    final getProjectProgress = ProjectDependencies.createGetProjectProgress(
+      repository,
+    );
 
     screen = [
       HomeScreen(onNavigate: _changeTab),
       const LearnScreen(),
       const RoadmapScreen(),
       ProjectScreen(
-        getProjects: ProjectDependencies.createGetProjects(
-          ProjectDependencies.createRepository(
-            ProjectDependencies.createLocalDataSource(),
-          ),
-        ),
+        getProjects: getProjects,
+        getProjectProgress: getProjectProgress,
       ),
     ];
   }

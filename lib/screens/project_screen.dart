@@ -1,15 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:study_flow/features/project/domain/entities/project.dart';
+import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/features/project/domain/usecases/get_projects.dart';
 import 'package:study_flow/widgets/project_card.dart';
 
 class ProjectScreen extends StatefulWidget {
   final GetProjects getProjects;
+  final GetProjectProgress getProjectProgress;
 
   const ProjectScreen({
     super.key,
     required this.getProjects,
+    required this.getProjectProgress,
   });
 
   @override
@@ -81,6 +83,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               ...projects.map(
                 (project) => ProjectCard(
                   project: project,
+                  getProjectProgress: widget.getProjectProgress,
                 ),
               ),
             ],
