@@ -4,7 +4,7 @@ import 'package:study_flow/features/project/domain/entities/project.dart';
 import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
 import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
-import 'package:study_flow/screens/project_details_screen.dart';
+import 'package:study_flow/features/project/presentation/screens/project_details_screen.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;

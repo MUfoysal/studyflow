@@ -5,11 +5,11 @@ import 'package:study_flow/features/project/domain/entities/project_progress.dar
 import 'package:study_flow/features/project/domain/usecases/complete_project_step.dart';
 import 'package:study_flow/features/project/domain/usecases/get_project_progress.dart';
 import 'package:study_flow/features/project/domain/usecases/is_project_step_completed.dart';
-import 'package:study_flow/screens/project_step_details_screen.dart';
-import 'package:study_flow/widgets/bullet_list.dart';
-import 'package:study_flow/widgets/code_block.dart';
-import 'package:study_flow/widgets/project_section.dart';
-import 'package:study_flow/widgets/technology_chip.dart';
+import 'package:study_flow/features/project/presentation/screens/project_step_details_screen.dart';
+import 'package:study_flow/features/project/presentation/widgets/bullet_list.dart';
+import 'package:study_flow/features/project/presentation/widgets/code_block.dart';
+import 'package:study_flow/features/project/presentation/widgets/project_section.dart';
+import 'package:study_flow/features/project/presentation/widgets/technology_chip.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
