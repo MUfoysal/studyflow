@@ -6,4 +6,11 @@ abstract class LearnRepository {
   List<LearnLesson> getDartLessons();
 
   List<LearnLesson> getGitLessons();
+
+  Future<List<int>> getCompletedLessonIndexes(String courseTitle);
+
+  Future<void> completeLesson(
+    String courseTitle,
+    int lessonIndex,
+  );
 }

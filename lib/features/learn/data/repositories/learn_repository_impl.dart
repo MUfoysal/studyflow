@@ -23,4 +23,22 @@ class LearnRepositoryImpl implements LearnRepository {
   List<LearnLesson> getGitLessons() {
     return localDataSource.getGitLessons();
   }
+
+  @override
+  Future<List<int>> getCompletedLessonIndexes(
+    String courseTitle,
+  ) {
+    return localDataSource.getCompletedLessonIndexes(courseTitle);
+  }
+
+  @override
+  Future<void> completeLesson(
+    String courseTitle,
+    int lessonIndex,
+  ) {
+    return localDataSource.completeLesson(
+      courseTitle,
+      lessonIndex,
+    );
+  }
 }

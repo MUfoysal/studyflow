@@ -1,6 +1,6 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:study_flow/data/project_data.dart';
+import 'package:study_flow/features/project/data/datasources/project_data.dart';
 import 'package:study_flow/features/project/domain/entities/project.dart';
 
 class ProjectLocalDataSource {

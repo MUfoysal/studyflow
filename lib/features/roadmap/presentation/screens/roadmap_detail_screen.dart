@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'package:study_flow/features/learn/di/learn_dependencies.dart';
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
+import 'package:study_flow/features/learn/presentation/screens/lesson_screen.dart';
+
 import 'package:study_flow/features/roadmap/domain/entities/roadmap_step.dart';
 import 'package:study_flow/features/roadmap/domain/usecases/get_completed_roadmap_lesson_count.dart';
 import 'package:study_flow/features/roadmap/domain/usecases/get_roadmap_lessons.dart';
-import 'package:study_flow/screens/lesson_screen.dart';
 
 class RoadmapDetailScreen extends StatefulWidget {
   final RoadmapStep step;
@@ -70,6 +73,10 @@ class _RoadmapDetailScreenState
           title: widget.step.title,
           lessonCount: lessons.length,
           lessons: lessons,
+          getCompletedLessonIndexes:
+              LearnDependencies.getCompletedLessonIndexes(),
+          completeLesson:
+              LearnDependencies.completeLesson(),
         ),
       ),
     );
@@ -105,7 +112,9 @@ class _RoadmapDetailScreenState
               completedLessons: completedLessons,
               totalLessons: lessons.length,
             ),
+
             const SizedBox(height: 24),
+
             const Text(
               'About This Step',
               style: TextStyle(
@@ -113,7 +122,9 @@ class _RoadmapDetailScreenState
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             const SizedBox(height: 10),
+
             Text(
               widget.step.subtitle,
               style: TextStyle(
@@ -122,7 +133,9 @@ class _RoadmapDetailScreenState
                 height: 1.5,
               ),
             ),
+
             const SizedBox(height: 28),
+
             Row(
               mainAxisAlignment:
                   MainAxisAlignment.spaceBetween,
@@ -143,7 +156,9 @@ class _RoadmapDetailScreenState
                 ),
               ],
             ),
+
             const SizedBox(height: 14),
+
             if (lessons.isEmpty)
               const _EmptyLessonsCard()
             else
@@ -162,7 +177,9 @@ class _RoadmapDetailScreenState
                   );
                 },
               ),
+
             const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -196,7 +213,9 @@ class _RoadmapDetailScreenState
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -233,6 +252,7 @@ class _RoadmapDetailScreenState
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
           ],
         ),
@@ -304,7 +324,9 @@ class _HeaderCard extends StatelessWidget {
               ),
             ),
           ),
+
           const SizedBox(height: 18),
+
           Text(
             step.title,
             style: const TextStyle(
@@ -313,7 +335,9 @@ class _HeaderCard extends StatelessWidget {
               letterSpacing: -0.5,
             ),
           ),
+
           const SizedBox(height: 8),
+
           Text(
             step.subtitle,
             style: const TextStyle(
@@ -322,7 +346,9 @@ class _HeaderCard extends StatelessWidget {
               height: 1.4,
             ),
           ),
+
           const SizedBox(height: 22),
+
           Row(
             children: [
               Expanded(
@@ -360,7 +386,9 @@ class _HeaderCard extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(width: 12),
+
               Text(
                 '${(progress * 100).toInt()}%',
                 style: const TextStyle(
@@ -371,7 +399,9 @@ class _HeaderCard extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 8),
+
           Text(
             '$completedLessons of $totalLessons lessons completed',
             style: const TextStyle(
@@ -436,7 +466,9 @@ class _LessonPreviewCard
               ),
             ),
           ),
+
           const SizedBox(width: 14),
+
           Expanded(
             child: Text(
               title,
@@ -446,6 +478,7 @@ class _LessonPreviewCard
               ),
             ),
           ),
+
           Icon(
             Icons.chevron_right_rounded,
             color: Colors.grey.shade400,

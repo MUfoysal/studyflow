@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
-
-import 'package:study_flow/screens/lesson_details_screen.dart';
-
+import 'package:study_flow/features/learn/domain/usecases/complete_lesson.dart';
+import 'package:study_flow/features/learn/domain/usecases/get_completed_lesson_indexes.dart';
+import 'package:study_flow/features/learn/presentation/screens/lesson_details_screen.dart';
 class LessonScreen extends StatefulWidget {
   final String title;
-
   final int lessonCount;
-
   final List<LearnLesson> lessons;
+
+  final GetCompletedLessonIndexes getCompletedLessonIndexes;
+  final CompleteLesson completeLesson;
 
   const LessonScreen({
     super.key,
     required this.title,
     required this.lessonCount,
     required this.lessons,
+    required this.getCompletedLessonIndexes,
+    required this.completeLesson,
   });
 
   @override
@@ -34,19 +35,13 @@ class _LessonScreenState extends State<LessonScreen> {
   }
 
   Future<void> _loadCompletedLessons() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final savedLessons =
-        prefs.getStringList('completed_${widget.title}') ?? [];
+    final savedIndexes =
+        await widget.getCompletedLessonIndexes(widget.title);
 
     final loadedLessons = <int>{};
 
-    for (final value in savedLessons) {
-      final index = int.tryParse(value);
-
-      if (index != null &&
-          index >= 0 &&
-          index < widget.lessons.length) {
+    for (final index in savedIndexes) {
+      if (index >= 0 && index < widget.lessons.length) {
         loadedLessons.add(index);
       }
     }
@@ -67,11 +62,9 @@ class _LessonScreenState extends State<LessonScreen> {
       completedLessons.add(index);
     });
 
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setStringList(
-      'completed_${widget.title}',
-      completedLessons.map((i) => i.toString()).toList(),
+    await widget.completeLesson(
+      widget.title,
+      index,
     );
   }
 
@@ -126,6 +119,7 @@ class _LessonScreenState extends State<LessonScreen> {
                       keyPoints: lesson.keyPoints,
                       exampleCode: lesson.exampleCode,
                       onComplete: () => _markComplete(index),
+                      getCompletedLessonIndexes: widget.getCompletedLessonIndexes,
                     ),
                   ),
                 );
@@ -140,7 +134,6 @@ class _LessonScreenState extends State<LessonScreen> {
 
 class _AnimatedEntry extends StatefulWidget {
   final Widget child;
-
   final int delayMs;
 
   const _AnimatedEntry({
@@ -155,9 +148,7 @@ class _AnimatedEntry extends StatefulWidget {
 class _AnimatedEntryState extends State<_AnimatedEntry>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-
   late final Animation<double> _fade;
-
   late final Animation<Offset> _slide;
 
   @override
@@ -214,13 +205,9 @@ class _AnimatedEntryState extends State<_AnimatedEntry>
 
 class _LessonTile extends StatelessWidget {
   final int number;
-
   final String title;
-
   final bool isCompleted;
-
   final bool showConnector;
-
   final VoidCallback onTap;
 
   const _LessonTile({

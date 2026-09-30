@@ -1,5 +1,7 @@
 import 'package:study_flow/features/learn/data/datasources/learn_local_data_source.dart';
 import 'package:study_flow/features/learn/data/repositories/learn_repository_impl.dart';
+import 'package:study_flow/features/learn/domain/usecases/complete_lesson.dart';
+import 'package:study_flow/features/learn/domain/usecases/get_completed_lesson_indexes.dart';
 import 'package:study_flow/features/learn/domain/usecases/get_learn_courses.dart';
 
 class LearnDependencies {
@@ -13,5 +15,29 @@ class LearnDependencies {
     );
 
     return GetLearnCourses(repository);
+  }
+
+  static GetCompletedLessonIndexes getCompletedLessonIndexes() {
+    const localDataSource = LearnLocalDataSource();
+
+    const repository = LearnRepositoryImpl(
+      localDataSource: localDataSource,
+    );
+
+    return GetCompletedLessonIndexes(
+      repository: repository,
+    );
+  }
+
+  static CompleteLesson completeLesson() {
+    const localDataSource = LearnLocalDataSource();
+
+    const repository = LearnRepositoryImpl(
+      localDataSource: localDataSource,
+    );
+
+    return CompleteLesson(
+      repository: repository,
+    );
   }
 }

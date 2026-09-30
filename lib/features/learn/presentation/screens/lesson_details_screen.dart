@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:study_flow/features/learn/domain/usecases/get_completed_lesson_indexes.dart';
 
 class LessonDetailsScreen extends StatefulWidget {
   final String courseTitle;
@@ -11,6 +12,8 @@ class LessonDetailsScreen extends StatefulWidget {
   final String exampleCode;
   final VoidCallback? onComplete;
 
+  final GetCompletedLessonIndexes getCompletedLessonIndexes;
+
   const LessonDetailsScreen({
     super.key,
     required this.courseTitle,
@@ -20,11 +23,11 @@ class LessonDetailsScreen extends StatefulWidget {
     required this.keyPoints,
     required this.exampleCode,
     this.onComplete,
+    required this.getCompletedLessonIndexes,
   });
 
   @override
-  State<LessonDetailsScreen> createState() =>
-      _LessonDetailsScreenState();
+  State<LessonDetailsScreen> createState() => _LessonDetailsScreenState();
 }
 
 class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
@@ -32,17 +35,15 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
   bool _copied = false;
 
   Future<void> loadCompletionStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final savedLessons =
-        prefs.getStringList('completed_${widget.courseTitle}') ?? [];
+    final savedIndexes =
+        await widget.getCompletedLessonIndexes(widget.courseTitle);
 
     final lessonIndex = widget.lessonNumber - 1;
 
     if (!mounted) return;
 
     setState(() {
-      isCompleted = savedLessons.contains(lessonIndex.toString());
+      isCompleted = savedIndexes.contains(lessonIndex);
     });
   }
 

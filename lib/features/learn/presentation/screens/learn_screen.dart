@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:study_flow/features/learn/di/learn_dependencies.dart';
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
+import 'package:study_flow/features/learn/domain/usecases/get_completed_lesson_indexes.dart';
 import 'package:study_flow/features/learn/presentation/widgets/animated_entry.dart';
 import 'package:study_flow/features/learn/presentation/widgets/continue_learning_banner.dart';
 import 'package:study_flow/features/learn/presentation/widgets/course_card.dart';
-import 'package:study_flow/screens/lesson_screen.dart';
+import 'package:study_flow/features/learn/presentation/screens/lesson_screen.dart';
 
 class LearnScreen extends StatefulWidget {
   const LearnScreen({super.key});
@@ -17,6 +17,8 @@ class LearnScreen extends StatefulWidget {
 
 class _LearnScreenState extends State<LearnScreen> {
   final getLearnCourses = LearnDependencies.getLearnCourses();
+  final GetCompletedLessonIndexes getCompletedLessonIndexes =
+      LearnDependencies.getCompletedLessonIndexes();
 
   double flutterProgress = 0.0;
   double dartProgress = 0.0;
@@ -41,19 +43,13 @@ class _LearnScreenState extends State<LearnScreen> {
     String courseTitle,
     int totalLessons,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final savedLessons =
-        prefs.getStringList('completed_$courseTitle') ?? [];
+    final savedIndexes =
+        await getCompletedLessonIndexes(courseTitle);
 
     final completedIndexes = <int>{};
 
-    for (final value in savedLessons) {
-      final index = int.tryParse(value);
-
-      if (index != null &&
-          index >= 0 &&
-          index < totalLessons) {
+    for (final index in savedIndexes) {
+      if (index >= 0 && index < totalLessons) {
         completedIndexes.add(index);
       }
     }
@@ -101,6 +97,9 @@ class _LearnScreenState extends State<LearnScreen> {
           title: title,
           lessonCount: lessons.length,
           lessons: lessons,
+          getCompletedLessonIndexes: getCompletedLessonIndexes,
+          completeLesson: LearnDependencies.completeLesson(),
+
         ),
       ),
     );
@@ -123,7 +122,7 @@ class _LearnScreenState extends State<LearnScreen> {
               const AnimatedEntry(
                 index: 0,
                 child: Text(
-                  'Start Learning 📚',
+                  'Start Learning ðŸ“š',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,

@@ -1,4 +1,4 @@
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
 
 class LearnLocalDataSource {
@@ -394,7 +394,7 @@ git commit -m "Add login screen"
         keyPoints: [
           'git push sends commits to a remote repository.',
           'It keeps the GitHub repository updated.',
-          'You normally push after committing changes.',
+          'You normally push after committing.',
         ],
         exampleCode: '''
 git push origin main
@@ -441,5 +441,38 @@ git switch feature-login
 ''',
       ),
     ];
+  }
+
+  Future<List<int>> getCompletedLessonIndexes(
+    String courseTitle,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final completedIndexes =
+        prefs.getStringList('completed_$courseTitle') ?? [];
+
+    return completedIndexes
+        .map(int.tryParse)
+        .whereType<int>()
+        .toList();
+  }
+
+  Future<void> completeLesson(
+    String courseTitle,
+    int lessonIndex,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final completedIndexes =
+        prefs.getStringList('completed_$courseTitle') ?? [];
+
+    if (!completedIndexes.contains(lessonIndex.toString())) {
+      completedIndexes.add(lessonIndex.toString());
+    }
+
+    await prefs.setStringList(
+      'completed_$courseTitle',
+      completedIndexes,
+    );
   }
 }

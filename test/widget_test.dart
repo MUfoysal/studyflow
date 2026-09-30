@@ -1,6 +1,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:study_flow/data/project_data.dart';
+import 'package:study_flow/features/project/data/datasources/project_data.dart';
 
 void main() {
   test('StudyFlow project data is available', () {
