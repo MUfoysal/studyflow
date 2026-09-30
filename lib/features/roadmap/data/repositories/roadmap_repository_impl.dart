@@ -1,15 +1,12 @@
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
 import 'package:study_flow/features/learn/domain/repositories/learn_repository.dart';
-import 'package:study_flow/features/roadmap/data/datasources/roadmap_local_data_source.dart';
 import 'package:study_flow/features/roadmap/domain/entities/roadmap_step.dart';
 import 'package:study_flow/features/roadmap/domain/repositories/roadmap_repository.dart';
 
 class RoadmapRepositoryImpl implements RoadmapRepository {
-  final RoadmapLocalDataSource localDataSource;
   final LearnRepository learnRepository;
 
   const RoadmapRepositoryImpl({
-    required this.localDataSource,
     required this.learnRepository,
   });
 
@@ -73,7 +70,7 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
     }
 
     final completedIndexes =
-        await localDataSource.getCompletedLessonIndexes(
+        await learnRepository.getCompletedLessonIndexes(
       stepTitle,
     );
 

@@ -41,12 +41,8 @@ class _MainScreenState extends State<MainScreen> {
       repository,
     );
 
-    final roadmapLocalDataSource =
-        RoadmapDependencies.createLocalDataSource();
-    final roadmapRepository =
-        RoadmapDependencies.createRepository(
-      roadmapLocalDataSource,
-    );
+   final roadmapRepository =
+    RoadmapDependencies.createRepository();
     final getRoadmapSteps =
         RoadmapDependencies.createGetRoadmapSteps(
       roadmapRepository,

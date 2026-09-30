@@ -1,5 +1,4 @@
 import 'package:study_flow/features/learn/di/learn_dependencies.dart';
-import 'package:study_flow/features/roadmap/data/datasources/roadmap_local_data_source.dart';
 import 'package:study_flow/features/roadmap/data/repositories/roadmap_repository_impl.dart';
 import 'package:study_flow/features/roadmap/domain/repositories/roadmap_repository.dart';
 import 'package:study_flow/features/roadmap/domain/usecases/get_completed_roadmap_lesson_count.dart';
@@ -10,18 +9,11 @@ import 'package:study_flow/features/roadmap/domain/usecases/is_roadmap_step_comp
 class RoadmapDependencies {
   const RoadmapDependencies._();
 
-  static RoadmapLocalDataSource createLocalDataSource() {
-    return RoadmapLocalDataSource();
-  }
-
-  static RoadmapRepository createRepository(
-    RoadmapLocalDataSource localDataSource,
-  ) {
+  static RoadmapRepository createRepository() {
     final learnRepository =
         LearnDependencies.getLearnCourses().repository;
 
     return RoadmapRepositoryImpl(
-      localDataSource: localDataSource,
       learnRepository: learnRepository,
     );
   }

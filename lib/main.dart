@@ -12,9 +12,7 @@ import 'package:study_flow/screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const StudyFlowApp());
 }
@@ -29,9 +27,7 @@ class StudyFlowApp extends StatelessWidget {
       title: 'StudyFlow',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF16A34A),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF16A34A)),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: Color(0xFF111827),
@@ -45,43 +41,29 @@ class StudyFlowApp extends StatelessWidget {
         },
 
         '/roadmap-detail': (context) {
-          final arguments =
-              ModalRoute.of(context)?.settings.arguments;
+          final arguments = ModalRoute.of(context)?.settings.arguments;
 
           if (arguments is! RoadmapStep) {
             return const Scaffold(
-              body: Center(
-                child: Text(
-                  'Roadmap step data not found.',
-                ),
-              ),
+              body: Center(child: Text('Roadmap step data not found.')),
             );
           }
 
-          final localDataSource =
-              RoadmapDependencies.createLocalDataSource();
+          final repository = RoadmapDependencies.createRepository();
 
-          final repository =
-              RoadmapDependencies.createRepository(
-            localDataSource,
-          );
-
-          final getRoadmapLessons =
-              RoadmapDependencies.createGetRoadmapLessons(
+          final getRoadmapLessons = RoadmapDependencies.createGetRoadmapLessons(
             repository,
           );
 
           final getCompletedRoadmapLessonCount =
-              RoadmapDependencies
-                  .createGetCompletedRoadmapLessonCount(
-            repository,
-          );
+              RoadmapDependencies.createGetCompletedRoadmapLessonCount(
+                repository,
+              );
 
           return RoadmapDetailScreen(
             step: arguments,
             getRoadmapLessons: getRoadmapLessons,
-            getCompletedRoadmapLessonCount:
-                getCompletedRoadmapLessonCount,
+            getCompletedRoadmapLessonCount: getCompletedRoadmapLessonCount,
           );
         },
       },
