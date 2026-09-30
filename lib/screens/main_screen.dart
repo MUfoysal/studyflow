@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:study_flow/features/home/presentation/screens/home_screen.dart';
 import 'package:study_flow/features/learn/presentation/screens/learn_screen.dart';
-import 'package:study_flow/features/project/presentation/screens/project_screen.dart';
-import 'package:study_flow/screens/roadmap_screen.dart';
 import 'package:study_flow/features/project/di/project_dependencies.dart';
+import 'package:study_flow/features/project/presentation/screens/project_screen.dart';
+import 'package:study_flow/features/roadmap/di/roadmap_dependencies.dart';
+import 'package:study_flow/features/roadmap/presentation/screens/roadmap_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,34 +16,53 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
-
   late final List<Widget> screen;
 
-  @override
   @override
   void initState() {
     super.initState();
 
-    final localDataSource = ProjectDependencies.createLocalDataSource();
-
-    final repository = ProjectDependencies.createRepository(localDataSource);
-
-    final getProjects = ProjectDependencies.createGetProjects(repository);
-
-    final getProjectProgress = ProjectDependencies.createGetProjectProgress(
+    final localDataSource =
+        ProjectDependencies.createLocalDataSource();
+    final repository =
+        ProjectDependencies.createRepository(localDataSource);
+    final getProjects =
+        ProjectDependencies.createGetProjects(repository);
+    final getProjectProgress =
+        ProjectDependencies.createGetProjectProgress(
       repository,
     );
     final isProjectStepCompleted =
-        ProjectDependencies.createIsProjectStepCompleted(repository);
-
-    final completeProjectStep = ProjectDependencies.createCompleteProjectStep(
+        ProjectDependencies.createIsProjectStepCompleted(
       repository,
+    );
+    final completeProjectStep =
+        ProjectDependencies.createCompleteProjectStep(
+      repository,
+    );
+
+    final roadmapLocalDataSource =
+        RoadmapDependencies.createLocalDataSource();
+    final roadmapRepository =
+        RoadmapDependencies.createRepository(
+      roadmapLocalDataSource,
+    );
+    final getRoadmapSteps =
+        RoadmapDependencies.createGetRoadmapSteps(
+      roadmapRepository,
+    );
+    final isRoadmapStepCompleted =
+        RoadmapDependencies.createIsRoadmapStepCompleted(
+      roadmapRepository,
     );
 
     screen = [
       HomeScreen(onNavigate: _changeTab),
       const LearnScreen(),
-      const RoadmapScreen(),
+      RoadmapScreen(
+        getRoadmapSteps: getRoadmapSteps,
+        isRoadmapStepCompleted: isRoadmapStepCompleted,
+      ),
       ProjectScreen(
         getProjects: getProjects,
         getProjectProgress: getProjectProgress,
@@ -62,17 +82,31 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screen[selectedIndex],
-
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
         child: GNav(
           selectedIndex: selectedIndex,
           onTabChange: _changeTab,
           tabs: const [
-            GButton(icon: Icons.home, text: 'Home'),
-            GButton(icon: Icons.menu_book, text: 'Learn'),
-            GButton(icon: Icons.route, text: 'Roadmap'),
-            GButton(icon: Icons.code, text: 'Projects'),
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.menu_book,
+              text: 'Learn',
+            ),
+            GButton(
+              icon: Icons.route,
+              text: 'Roadmap',
+            ),
+            GButton(
+              icon: Icons.code,
+              text: 'Projects',
+            ),
           ],
         ),
       ),

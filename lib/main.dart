@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
+
+import 'package:study_flow/features/roadmap/di/roadmap_dependencies.dart';
+import 'package:study_flow/features/roadmap/domain/entities/roadmap_step.dart';
+import 'package:study_flow/features/roadmap/presentation/screens/roadmap_detail_screen.dart';
 import 'package:study_flow/screens/main_screen.dart';
-import 'package:study_flow/screens/roadmap_screen.dart';
-import 'package:study_flow/screens/roadmap_detail_screen.dart';
 import 'package:study_flow/screens/splash_screen.dart';
 
 void main() async {
@@ -23,37 +26,63 @@ class StudyFlowApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "StudyFlow",
-
+      title: 'StudyFlow',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF16A34A)),
-
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF16A34A),
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: Color(0xFF111827),
           elevation: 0,
         ),
       ),
-
       home: const SplashScreen(),
-
       routes: {
         '/main': (context) {
           return const MainScreen();
         },
 
         '/roadmap-detail': (context) {
-          final arguments = ModalRoute.of(context)?.settings.arguments;
+          final arguments =
+              ModalRoute.of(context)?.settings.arguments;
 
           if (arguments is! RoadmapStep) {
             return const Scaffold(
-              body: Center(child: Text("Roadmap step data not found.")),
+              body: Center(
+                child: Text(
+                  'Roadmap step data not found.',
+                ),
+              ),
             );
           }
 
-          return RoadmapDetailScreen(step: arguments);
+          final localDataSource =
+              RoadmapDependencies.createLocalDataSource();
+
+          final repository =
+              RoadmapDependencies.createRepository(
+            localDataSource,
+          );
+
+          final getRoadmapLessons =
+              RoadmapDependencies.createGetRoadmapLessons(
+            repository,
+          );
+
+          final getCompletedRoadmapLessonCount =
+              RoadmapDependencies
+                  .createGetCompletedRoadmapLessonCount(
+            repository,
+          );
+
+          return RoadmapDetailScreen(
+            step: arguments,
+            getRoadmapLessons: getRoadmapLessons,
+            getCompletedRoadmapLessonCount:
+                getCompletedRoadmapLessonCount,
+          );
         },
       },
     );

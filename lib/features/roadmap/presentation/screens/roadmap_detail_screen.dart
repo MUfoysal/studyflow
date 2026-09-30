@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:study_flow/features/learn/di/learn_dependencies.dart';
-
 import 'package:study_flow/features/learn/domain/entities/learn_lesson.dart';
-
+import 'package:study_flow/features/roadmap/domain/entities/roadmap_step.dart';
+import 'package:study_flow/features/roadmap/domain/usecases/get_completed_roadmap_lesson_count.dart';
+import 'package:study_flow/features/roadmap/domain/usecases/get_roadmap_lessons.dart';
 import 'package:study_flow/screens/lesson_screen.dart';
-
-import 'package:study_flow/screens/roadmap_screen.dart';
 
 class RoadmapDetailScreen extends StatefulWidget {
   final RoadmapStep step;
+  final GetRoadmapLessons getRoadmapLessons;
+  final GetCompletedRoadmapLessonCount
+      getCompletedRoadmapLessonCount;
 
   const RoadmapDetailScreen({
     super.key,
     required this.step,
+    required this.getRoadmapLessons,
+    required this.getCompletedRoadmapLessonCount,
   });
 
   @override
@@ -26,13 +26,9 @@ class RoadmapDetailScreen extends StatefulWidget {
 class _RoadmapDetailScreenState
     extends State<RoadmapDetailScreen> {
   double progress = 0.0;
-
   int completedLessons = 0;
 
   late final List<LearnLesson> lessons;
-
-  final getLearnCourses =
-      LearnDependencies.getLearnCourses();
 
   bool get _isStepCompleted {
     return lessons.isNotEmpty &&
@@ -43,52 +39,23 @@ class _RoadmapDetailScreenState
   void initState() {
     super.initState();
 
-    lessons = _getLessons();
+    lessons = widget.getRoadmapLessons(
+      widget.step.title,
+    );
 
     _loadProgress();
   }
 
-  List<LearnLesson> _getLessons() {
-    switch (widget.step.title) {
-      case "Dart Programming":
-        return getLearnCourses.getDartLessons();
-
-      case "Flutter Basics":
-        return getLearnCourses.getFlutterLessons();
-
-      case "Git & GitHub":
-        return getLearnCourses.getGitLessons();
-
-      default:
-        return [];
-    }
-  }
-
   Future<void> _loadProgress() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final savedLessons =
-        prefs.getStringList(
-          'completed_${widget.step.title}',
-        ) ??
-        [];
-
-    final validCompletedLessons = savedLessons
-        .map(int.tryParse)
-        .whereType<int>()
-        .where(
-          (index) =>
-              index >= 0 &&
-              index < lessons.length,
-        )
-        .toSet();
+    final completedCount =
+        await widget.getCompletedRoadmapLessonCount(
+      widget.step.title,
+    );
 
     if (!mounted) return;
 
     setState(() {
-      completedLessons =
-          validCompletedLessons.length;
-
+      completedLessons = completedCount;
       progress = lessons.isEmpty
           ? 0.0
           : completedLessons / lessons.length;
@@ -130,8 +97,7 @@ class _RoadmapDetailScreenState
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _HeaderCard(
               step: widget.step,
@@ -141,7 +107,7 @@ class _RoadmapDetailScreenState
             ),
             const SizedBox(height: 24),
             const Text(
-              "About This Step",
+              'About This Step',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -162,14 +128,14 @@ class _RoadmapDetailScreenState
                   MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Lessons",
+                  'Lessons',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "${lessons.length} Lessons",
+                  '${lessons.length} Lessons',
                   style: const TextStyle(
                     color: Color(0xFF16A34A),
                     fontWeight: FontWeight.w600,
@@ -184,16 +150,12 @@ class _RoadmapDetailScreenState
               ...List.generate(
                 lessons.length,
                 (index) {
-                  final lesson =
-                      lessons[index];
+                  final lesson = lessons[index];
 
                   return Padding(
                     padding:
-                        const EdgeInsets.only(
-                      bottom: 10,
-                    ),
-                    child:
-                        _LessonPreviewCard(
+                        const EdgeInsets.only(bottom: 10),
+                    child: _LessonPreviewCard(
                       number: index + 1,
                       title: lesson.title,
                     ),
@@ -205,15 +167,11 @@ class _RoadmapDetailScreenState
               width: double.infinity,
               child: ElevatedButton(
                 onPressed:
-                    lessons.isEmpty
-                        ? null
-                        : _openLessons,
-                style:
-                    ElevatedButton.styleFrom(
+                    lessons.isEmpty ? null : _openLessons,
+                style: ElevatedButton.styleFrom(
                   backgroundColor:
                       const Color(0xFF16A34A),
-                  foregroundColor:
-                      Colors.white,
+                  foregroundColor: Colors.white,
                   disabledBackgroundColor:
                       Colors.grey.shade300,
                   elevation: 0,
@@ -229,8 +187,8 @@ class _RoadmapDetailScreenState
                 ),
                 child: Text(
                   _isStepCompleted
-                      ? "Review Lessons"
-                      : "Start Learning",
+                      ? 'Review Lessons'
+                      : 'Start Learning',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -243,15 +201,11 @@ class _RoadmapDetailScreenState
               width: double.infinity,
               child: ElevatedButton(
                 onPressed:
-                    _isStepCompleted
-                        ? _claimStep
-                        : null,
-                style:
-                    ElevatedButton.styleFrom(
+                    _isStepCompleted ? _claimStep : null,
+                style: ElevatedButton.styleFrom(
                   backgroundColor:
                       const Color(0xFF15803D),
-                  foregroundColor:
-                      Colors.white,
+                  foregroundColor: Colors.white,
                   disabledBackgroundColor:
                       Colors.grey.shade300,
                   disabledForegroundColor:
@@ -269,8 +223,8 @@ class _RoadmapDetailScreenState
                 ),
                 child: Text(
                   _isStepCompleted
-                      ? "Claim Step ✓"
-                      : "Complete All Lessons to Claim",
+                      ? 'Claim Step ✓'
+                      : 'Complete All Lessons to Claim',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,
@@ -289,11 +243,8 @@ class _RoadmapDetailScreenState
 
 class _HeaderCard extends StatelessWidget {
   final RoadmapStep step;
-
   final double progress;
-
   final int completedLessons;
-
   final int totalLessons;
 
   const _HeaderCard({
@@ -317,8 +268,7 @@ class _HeaderCard extends StatelessWidget {
             Color(0xFFBBF7D0),
           ],
         ),
-        borderRadius:
-            BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
             color:
@@ -345,7 +295,7 @@ class _HeaderCard extends StatelessWidget {
                   BorderRadius.circular(10),
             ),
             child: Text(
-              "STEP ${step.number}",
+              'STEP ${step.number}',
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -389,8 +339,7 @@ class _HeaderCard extends StatelessWidget {
                         const Duration(
                       milliseconds: 700,
                     ),
-                    curve:
-                        Curves.easeOutCubic,
+                    curve: Curves.easeOutCubic,
                     builder: (
                       context,
                       value,
@@ -413,7 +362,7 @@ class _HeaderCard extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                "${(progress * 100).toInt()}%",
+                '${(progress * 100).toInt()}%',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -424,7 +373,7 @@ class _HeaderCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            "$completedLessons of $totalLessons lessons completed",
+            '$completedLessons of $totalLessons lessons completed',
             style: const TextStyle(
               fontSize: 13,
               color: Color(0xFF15803D),
@@ -440,7 +389,6 @@ class _HeaderCard extends StatelessWidget {
 class _LessonPreviewCard
     extends StatelessWidget {
   final int number;
-
   final String title;
 
   const _LessonPreviewCard({
@@ -476,13 +424,12 @@ class _LessonPreviewCard
             height: 42,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color:
-                  const Color(0xFFDCFCE7),
+              color: const Color(0xFFDCFCE7),
               borderRadius:
                   BorderRadius.circular(12),
             ),
             child: Text(
-              "$number",
+              '$number',
               style: const TextStyle(
                 color: Color(0xFF16A34A),
                 fontWeight: FontWeight.bold,
@@ -517,8 +464,7 @@ class _EmptyLessonsCard
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding:
-          const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius:
@@ -528,7 +474,7 @@ class _EmptyLessonsCard
         ),
       ),
       child: const Text(
-        "No lessons available for this step yet.",
+        'No lessons available for this step yet.',
         style: TextStyle(
           color: Colors.black54,
         ),
